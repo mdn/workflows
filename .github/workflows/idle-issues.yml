@@ -1,5 +1,5 @@
 name: 'Mark issues and pull requests as idle'
-on: workflow_call
+on: [workflow_call]
 
 jobs:
   idle:
