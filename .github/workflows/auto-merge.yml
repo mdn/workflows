@@ -1,6 +1,11 @@
 name: auto-merge
 
-on: [workflow_call]
+on: 
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        description: 'Personal access token passed from the caller workflow'
+        required: true
 
 jobs:
   auto-merge:
