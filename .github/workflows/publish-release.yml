@@ -1,0 +1,54 @@
+name: publish-release
+
+on:
+  workflow_call:
+    inputs:
+      release-type:
+        description: The type of release to publish. See https://github.com/googleapis/release-please#release-types-supported
+        default: "node"
+        required: false
+        type: string
+      node-version:
+        description: The Nodejs version to use
+        default: 12
+        required: false
+        type: number
+      registry-url:
+        description: The registry to publish to
+        default: "https://registry.npmjs.org"
+        required: false
+        type: string
+    secrets:
+      GH_TOKEN:
+        description: 'Personal access token passed from the caller workflow'
+        required: true
+      NPM_AUTH_TOKEN:
+        description: 'Your NPM registry token'
+        required: true
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2.35
+        id: release
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          release-type: ${{ inputs.release-type }}
+          package-name: release-please-action
+      # The logic below handles the npm publication:
+      - uses: actions/checkout@v2.3.5
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v2.5.0
+        with:
+          node-version: ${{ inputs.release-type }}
+          registry-url: ${{ inputs.registry-url }}
+        if: ${{ steps.release.outputs.release_created }}
+      - run: yarn install --frozen-lockfile
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+        if: ${{ steps.release.outputs.release_created }}
