@@ -37,6 +37,8 @@ jobs:
 
 The `publish-release` GitHub Action automates publication of a new release on GitHub, updates the changelog and also publishes to the NPM registry.
 
+> NOTE: For the `release-please` workflow the work effectively, you need to follow the conventional commits conventions as [detailed here](https://www.conventionalcommits.org). You can also find additional documentation on the [GitHub Actions README](https://github.com/googleapis/release-please#how-should-i-write-my-commits).
+
 This reusable action depends on the following actions:
 
 - [GoogleCloudPlatform/release-please-action](https://github.com/googleapis/release-please)
