@@ -43,7 +43,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v2.5.0
         with:
-          node-version: ${{ inputs.release-type }}
+          node-version: ${{ inputs.node-version }}
           registry-url: ${{ inputs.registry-url }}
         if: ${{ steps.release.outputs.release_created }}
       - run: yarn install --frozen-lockfile
