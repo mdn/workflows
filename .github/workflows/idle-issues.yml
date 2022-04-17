@@ -11,8 +11,8 @@ jobs:
           days-before-close: -1
           stale-issue-message: ''
           stale-pr-message: ''
-          stale-issue-label: 'idle'
-          stale-pr-label: 'idle'
+          stale-issue-label: '🐌 idle'
+          stale-pr-label: '🐌 idle'
           enable-statistics: true
           ascending: true  # oldest first, for now
           operations-per-run: 300
