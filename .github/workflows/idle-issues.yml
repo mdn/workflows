@@ -5,7 +5,7 @@ jobs:
   idle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v4
+      - uses: actions/stale@v5
         with:
           days-before-stale: 37
           days-before-close: -1
