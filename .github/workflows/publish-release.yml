@@ -13,6 +13,11 @@ on:
         default: 12
         required: false
         type: number
+      npm-publish:
+        description: Whether to publish the package to npm
+        default: true
+        required: false
+        type: boolean
       registry-url:
         description: The registry to publish to
         default: "https://registry.npmjs.org"
@@ -37,6 +42,7 @@ jobs:
           release-type: ${{ inputs.release-type }}
           package-name: release-please-action
       # The logic below handles the npm publication:
+      if: ${{ inputs.npm-publish }}
       - uses: actions/checkout@v3
         # these if statements ensure that a publication only occurs when
         # a new release is created:
