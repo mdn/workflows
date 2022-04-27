@@ -12,5 +12,5 @@ jobs:
         uses: eps1lon/actions-label-merge-conflict@releases/2.x
         with:
           dirtyLabel: "rebase needed :construction:"
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          repoToken: "${{ secrets.GH_TOKEN }}"
           commentOnDirty: "This pull request has merge conflicts that must be resolved before we can merge this."
