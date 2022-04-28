@@ -5,7 +5,7 @@ on:
     inputs:
       label:
         description: The label to apply when a rebase is needed
-        default: "rebase needed"
+        default: "rebase needed :construction:"
         required: false
         type: string
       comment:

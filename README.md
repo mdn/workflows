@@ -47,9 +47,9 @@ The action has the following inputs:
 
 ### label
 
-If your repository uses a label named anything other than `rebase needed` (for example, [BCD](https://github.com/mdn/browser-compat-data) uses `rebase needed 🚧` -- note the emoji), you can set the label here.
+If your repository uses a label named anything other than `rebase needed 🚧` (for example, the repository may use `merge conflicts`), you can set the label here.
 
-- This `input` is optional with a default of `rebase needed`
+- This `input` is optional with a default of `rebase needed :construction:`
 
 ### comment
 
