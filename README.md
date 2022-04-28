@@ -67,7 +67,7 @@ Personal access token passed from the caller workflow. Read the documentation on
 
 ## Usage
 
-In the repository that will call this action, you will need to add a `.github/workflows/publish-release.yml` file with the following content:
+In the repository that will call this action, you will need to add a `.github/workflows/pr-rebase-needed.yml` file with the following content:
 
 ### With defaults
 
