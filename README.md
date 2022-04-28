@@ -105,44 +105,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-### Usage
-
-In the repository that will call this action, you will need to add a `.github/workflows/pr-rebase-needed.yml` file with the following content:
-
-```yml
-name: "PR Needs Rebase"
-on:
- push:
- pull_request_target:
-   types: [synchronize]
-
-on:
-  workflow_call:
-    inputs:
-      label:
-        description: The label to apply when a rebase is needed
-        default: "rebase needed"
-        required: false
-        type: string
-      comment:
-        description: The comment to write when a rebase is needed
-        default: "This pull request has merge conflicts that must be resolved before we can merge this."
-        required: false
-        type: string
-    secrets:
-      GH_TOKEN:
-        description: 'Personal access token passed from the caller workflow'
-        required: true
-
-jobs:
-  label-rebase-needed:
-    uses: mdn/workflows/.github/workflows/pr-rebase-needed.yml@main
-    with:
-      label: "rebase needed :construction:" # Replace with appropriate label
-      comment: "This pull request has merge conflicts."
-
-```
-
 ## publish-release
 
 The `publish-release` GitHub Action automates publication of a new release on GitHub, updates the changelog and also publishes to the NPM registry.
