@@ -60,6 +60,11 @@ The version of Node.js to use for the release. This action supports all [active 
 
 - This `input` is optional with a default of `12`
 
+### npm-publish
+
+Whether to publish the package to the NPM registry.
+
+- This `input` is optional with a default of `true`
 ### registry-url
 
 The registry to publish to.
@@ -118,4 +123,23 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+```
+
+### Skip NPM publishing
+
+```yml
+name: publish-release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-release:
+    uses:  mdn/workflows/.github/workflows/publish-release.yml@main
+    with:
+      npm-publish: false
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
