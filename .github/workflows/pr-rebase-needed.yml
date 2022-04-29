@@ -1,0 +1,30 @@
+name: "PR Needs Rebase"
+
+on:
+  workflow_call:
+    inputs:
+      label:
+        description: The label to apply when a rebase is needed
+        default: "rebase needed :construction:"
+        required: false
+        type: string
+      comment:
+        description: The comment to write when a rebase is needed
+        default: "This pull request has merge conflicts that must be resolved before we can merge this."
+        required: false
+        type: string
+    secrets:
+      GH_TOKEN:
+        description: 'Personal access token passed from the caller workflow'
+        required: true
+
+jobs:
+  label-rebase-needed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for merge conflicts
+        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+        with:
+          dirtyLabel: ${{ inputs.label }}
+          repoToken: "${{ secrets.GH_TOKEN }}"
+          commentOnDirty: ${{ inputs.comment }}
