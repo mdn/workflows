@@ -105,6 +105,90 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
+## idle-issues
+
+The `idle-issues` reusable action is located in `.github/workflows/idle-issues.yml`.
+
+This reusable action depends on the following actions:
+
+- [stale](https://github.com/marketplace/actions/close-stale-issues)
+
+## Inputs
+
+The action has the following inputs:
+
+### label
+
+If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
+
+- This `input` is optional with a default of `🐌 idle`
+
+### comment
+
+When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know.  This can be changed to whatever the repository desires, or left blank if no comment should be added.  If `closure-days` is set, this is highly recommended to ensure the author knows their issue or PR will be closed.
+
+- This `input` is optional with a default of an empty string
+
+### stale-days
+
+The number of days before the issue or pull request is considered idle and the label and/or comment is applied.
+
+- This `input` is optional with a default of 37
+
+### closure-days
+
+The number of days before the idle issue or pull request is closed.  Set to -1 to disable.
+
+- This `input` is optional with a default of -1
+
+## Secrets
+
+This action requires the following secrets to be passed by the caller. These need to be set as [environmental secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) using the calling repositories settings.
+
+### GH_TOKEN
+
+Personal access token passed from the caller workflow. Read the documentation on [creating a PA token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+
+## Usage
+
+In the repository that will call this action, you will need to add a `.github/workflows/pr-rebase-needed.yml` file with the following content:
+
+### With defaults
+
+```yml
+name: "PR Needs Rebase"
+
+on:
+  push:
+  pull_request_target:
+    types: [synchronize]
+
+jobs:
+  pr-needs-rebase:
+    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+### Overriding some defaults
+
+```yml
+name: "PR Needs Rebase"
+
+on:
+  push:
+  pull_request_target:
+    types: [synchronize]
+
+jobs:
+  pr-needs-rebase:
+    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+    with:
+      label: "rebase needed :construction:"
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
 ## publish-release
 
 The `publish-release` GitHub Action automates publication of a new release on GitHub, updates the changelog and also publishes to the NPM registry.
