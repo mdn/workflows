@@ -18,6 +18,11 @@ on:
         default: true
         required: false
         type: boolean
+      npm-publish-args:
+        description: Arguments passed to `npm publish` command; ignored if "npm-publish" is false
+        default: ""
+        required: false
+        type: string
       registry-url:
         description: The registry to publish to
         default: "https://registry.npmjs.org"
@@ -54,7 +59,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - run: yarn install --frozen-lockfile
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
+      - run: npm publish ${{ inputs.npm-publish-args }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
