@@ -1,5 +1,28 @@
 name: 'Mark issues and pull requests as idle'
-on: [workflow_call]
+
+on:
+  workflow_call:
+    inputs:
+      label:
+        description: The label to apply whenthe issue/PR is idle
+        default: "🐌 idle"
+        required: false
+        type: string
+      comment:
+        description: The comment to write when an issue/PR becomes idle
+        default: ""
+        required: false
+        type: string
+      stale-days:
+        description: How many days before the issue/PR is considered idle
+        default: 37
+        required: false
+        type: number
+      closure-days:
+        description: How many days before an idle issue/PR is closed
+        default: -1
+        required: false
+        type: number
 
 jobs:
   idle:
@@ -7,12 +30,12 @@ jobs:
     steps:
       - uses: actions/stale@v5
         with:
-          days-before-stale: 37
-          days-before-close: -1
-          stale-issue-message: ''
-          stale-pr-message: ''
-          stale-issue-label: '🐌 idle'
-          stale-pr-label: '🐌 idle'
+          days-before-stale: ${{ inputs.stale-days }}
+          days-before-close: ${{ inputs.closure-days }}
+          stale-issue-message: ${{ inputs.comment }}
+          stale-pr-message: ${{ inputs.comment }}
+          stale-issue-label: ${{ inputs.label }}
+          stale-pr-label: ${{ inputs.label }}
           enable-statistics: true
           ascending: true  # oldest first, for now
           operations-per-run: 300
