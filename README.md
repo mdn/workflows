@@ -156,7 +156,7 @@ In the repository that will call this action, you will need to add a `.github/wo
 ### With defaults
 
 ```yml
-name: "PR Needs Rebase"
+name: "Label Idle Issues"
 
 on:
   push:
@@ -173,7 +173,7 @@ jobs:
 ### Overriding some defaults
 
 ```yml
-name: "PR Needs Rebase"
+name: "Label Idle Issues"
 
 on:
   push:
@@ -184,7 +184,7 @@ jobs:
   mark-as-idle:
     uses: mdn/workflows/.github/workflows/mark-as-idle.yml@main
     with:
-      label: "rebase needed :construction:"
+      label: "stale"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
