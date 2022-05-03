@@ -137,6 +137,13 @@ The version of Node.js to use for the release. This action supports all [active 
 Whether to publish the package to the NPM registry.
 
 - This `input` is optional with a default of `true`
+
+### npm-publish-args
+
+Arguments to pass to the `npm publish` command.  This is ignored if `npm-publish` is set to `false`.
+
+- This `input` is optional with a default of an empty string
+
 ### registry-url
 
 The registry to publish to.
