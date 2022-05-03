@@ -151,7 +151,7 @@ Personal access token passed from the caller workflow. Read the documentation on
 
 ## Usage
 
-In the repository that will call this action, you will need to add a `.github/workflows/pr-rebase-needed.yml` file with the following content:
+In the repository that will call this action, you will need to add a `.github/workflows/mark-as-idle.yml` file with the following content:
 
 ### With defaults
 
@@ -164,8 +164,8 @@ on:
     types: [synchronize]
 
 jobs:
-  pr-needs-rebase:
-    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+  mark-as-idle:
+    uses: mdn/workflows/.github/workflows/mark-as-idle.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -181,8 +181,8 @@ on:
     types: [synchronize]
 
 jobs:
-  pr-needs-rebase:
-    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+  mark-as-idle:
+    uses: mdn/workflows/.github/workflows/mark-as-idle.yml@main
     with:
       label: "rebase needed :construction:"
     secrets:
