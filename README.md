@@ -246,6 +246,8 @@ Personal access token passed from the caller workflow. Read the documentation on
 
 Authentication token for the NPM registry. Read the documentation for details on [creating a token](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
+> NOTE: When skipping NPM publishing, this token is not required.
+
 ## Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/publish-release.yml` file with the following content:
