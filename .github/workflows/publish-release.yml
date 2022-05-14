@@ -1,11 +1,12 @@
 name: publish-release
-
-on:
+'on':
   workflow_call:
     inputs:
       release-type:
-        description: The type of release to publish. See https://github.com/googleapis/release-please#release-types-supported
-        default: "node"
+        description: >-
+          The type of release to publish. See
+          https://github.com/googleapis/release-please#release-types-supported
+        default: node
         required: false
         type: string
       node-version:
@@ -19,23 +20,24 @@ on:
         required: false
         type: boolean
       npm-publish-args:
-        description: Arguments passed to `npm publish` command; ignored if "npm-publish" is false
-        default: ""
+        description: >-
+          Arguments passed to `npm publish` command; ignored if "npm-publish" is
+          false
+        default: ''
         required: false
         type: string
       registry-url:
         description: The registry to publish to
-        default: "https://registry.npmjs.org"
+        default: 'https://registry.npmjs.org'
         required: false
         type: string
     secrets:
       GH_TOKEN:
-        description: 'Personal access token passed from the caller workflow'
+        description: Personal access token passed from the caller workflow
         required: true
       NPM_AUTH_TOKEN:
-        description: 'Your NPM registry token'
+        description: Your NPM registry token
         required: true
-
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -43,23 +45,20 @@ jobs:
       - uses: GoogleCloudPlatform/release-please-action@v3.2.1
         id: release
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          release-type: ${{ inputs.release-type }}
+          token: '${{ secrets.GH_TOKEN }}'
+          release-type: '${{ inputs.release-type }}'
           package-name: release-please-action
-      # The logic below handles the npm publication:
-      if: ${{ inputs.npm-publish }}
+        if: '${{ inputs.npm-publish }}'
       - uses: actions/checkout@v3
-        # these if statements ensure that a publication only occurs when
-        # a new release is created:
-        if: ${{ steps.release.outputs.release_created }}
+        if: '${{ steps.release.outputs.release_created }}'
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ inputs.node-version }}
-          registry-url: ${{ inputs.registry-url }}
-        if: ${{ steps.release.outputs.release_created }}
+          node-version: '${{ inputs.node-version }}'
+          registry-url: '${{ inputs.registry-url }}'
+        if: '${{ steps.release.outputs.release_created }}'
       - run: yarn install --frozen-lockfile
-        if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish ${{ inputs.npm-publish-args }}
+        if: '${{ steps.release.outputs.release_created }}'
+      - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
-        if: ${{ steps.release.outputs.release_created }}
+          NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
+        if: '${{ steps.release.outputs.release_created }}'
