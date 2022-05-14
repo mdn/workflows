@@ -37,7 +37,7 @@ name: publish-release
         required: true
       NPM_AUTH_TOKEN:
         description: Your NPM registry token
-        required: true
+        required: false
 jobs:
   release-please:
     runs-on: ubuntu-latest
