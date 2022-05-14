@@ -189,6 +189,19 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
+## lock-closed
+
+The `lock-closed` GitHub Action automatically locks issues and PRs that have been closed for more than a year.
+It is intended to reduce "necrobumping" (the addition of comments, including spam, to old/closed issues).
+
+This reusable action depends on the following actions:
+
+- [dessant/lock-threads@v3](https://github.com/dessant/lock-threads)
+
+> **Note:** The workflow is a copy of the default example: https://github.com/dessant/lock-threads#examplesis.
+> Usage, inputs, outputs, and amples are well documented in https://github.com/dessant/lock-threads
+
+
 ## publish-release
 
 The `publish-release` GitHub Action automates publication of a new release on GitHub, updates the changelog and also publishes to the NPM registry.
