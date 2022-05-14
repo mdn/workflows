@@ -48,17 +48,16 @@ jobs:
           token: '${{ secrets.GH_TOKEN }}'
           release-type: '${{ inputs.release-type }}'
           package-name: release-please-action
-        if: '${{ inputs.npm-publish }}'
       - uses: actions/checkout@v3
-        if: '${{ steps.release.outputs.release_created }}'
+        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v3
         with:
           node-version: '${{ inputs.node-version }}'
           registry-url: '${{ inputs.registry-url }}'
-        if: '${{ steps.release.outputs.release_created }}'
+        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
       - run: yarn install --frozen-lockfile
-        if: '${{ steps.release.outputs.release_created }}'
+        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
           NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
-        if: '${{ steps.release.outputs.release_created }}'
+        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
