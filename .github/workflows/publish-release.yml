@@ -49,15 +49,15 @@ jobs:
           release-type: '${{ inputs.release-type }}'
           package-name: release-please-action
       - uses: actions/checkout@v3
-        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
+        if: inputs.npm-publish && steps.release.outputs.release_created
       - uses: actions/setup-node@v3
         with:
           node-version: '${{ inputs.node-version }}'
           registry-url: '${{ inputs.registry-url }}'
-        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
+        if: inputs.npm-publish && steps.release.outputs.release_created
       - run: yarn install --frozen-lockfile
-        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
+        if: inputs.npm-publish && steps.release.outputs.release_created
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
           NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
-        if: ${{ inputs.npm-publish }} && ${{ steps.release.outputs.release_created }}
+        if: inputs.npm-publish && steps.release.outputs.release_created
