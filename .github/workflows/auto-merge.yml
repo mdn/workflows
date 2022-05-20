@@ -1,18 +1,24 @@
 name: auto-merge
 
-on: 
+on:
   workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
     secrets:
       GH_TOKEN:
-        description: 'Personal access token passed from the caller workflow'
+        description: "Personal access token passed from the caller workflow"
         required: true
 
 jobs:
   auto-merge:
+    if: github.repository == ${{ inputs.target-repo }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ahmadnassri/action-dependabot-auto-merge@5d98f10d910782d0bb431fc03ae26532543ae184  # v2, as of 2021-11-26
+      - uses: ahmadnassri/action-dependabot-auto-merge@5d98f10d910782d0bb431fc03ae26532543ae184 # v2, as of 2021-11-26
         with:
           target: minor
           github-token: ${{ secrets.GH_TOKEN }}
