@@ -3,6 +3,21 @@ name: auto-merge
 on:
   workflow_call:
     inputs:
+      auto-approve:
+        description: Automatically approve pull-requests
+        default: true
+        required: false
+        type: boolean
+      command:
+        description: The command to pass to Dependabot
+        default: "squash and merge"
+        required: false
+        type: string
+      target:
+        description: The version comparison target (major, minor, patch)
+        default: minor
+        required: false
+        type: string
       target-repo:
         description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
         required: true
@@ -18,7 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ahmadnassri/action-dependabot-auto-merge@5d98f10d910782d0bb431fc03ae26532543ae184 # v2, as of 2021-11-26
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2.6 
         with:
-          target: minor
+          approve: ${{ inputs.auto-approve }}
+          command: ${{ inputs.command }}
+          target: ${{ inputs.target }}
           github-token: ${{ secrets.GH_TOKEN }}

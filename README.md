@@ -22,15 +22,35 @@ This reusable action depends on the following actions:
 
 The action has the following inputs:
 
+### auto-approve
+
+Automatically approve pull-requests.
+
+- This `input` is optional with a default of `true` (`type:boolean`).
+
+### command
+
+The command to pass to Dependabot.
+
+- This `input` is optional with a default of `"squash and merge"` (`type:string`).
+
+### target
+
+The version comparison target. One off major, minor, or patch.
+
+- This `input` is optional with a default of `minor` (`type:string`).
+
 ### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
 - This `input` is required
 
-### Usage
+## Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/auto-merge.yml` file with the following content:
+
+### With defaults
 
 ```yml
 name: "auto-merge"
@@ -40,6 +60,23 @@ jobs:
   auto-merge:
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
     with:
+      target-repo: "mdn/workflows"
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+### Overriding some defaults
+
+```yml
+name: "auto-merge"
+on: [pull_request_target]
+
+jobs:
+  auto-merge:
+    uses: mdn/workflows/.github/workflows/auto-merge.yml@main
+    with:
+      auto-approve: false
+      command: "merge"
       target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
