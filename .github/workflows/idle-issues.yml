@@ -3,14 +3,19 @@ name: 'Mark issues and pull requests as idle'
 on:
   workflow_call:
     inputs:
-      label:
-        description: The label to apply whenthe issue/PR is idle
-        default: "🐌 idle"
+      closure-days:
+        description: How many days before an idle issue/PR is closed
+        default: -1
         required: false
-        type: string
+        type: number
       comment:
         description: The comment to write when an issue/PR becomes idle
         default: ""
+        required: false
+        type: string
+      label:
+        description: The label to apply when the issue/PR is idle
+        default: "🐌 idle"
         required: false
         type: string
       stale-days:
@@ -18,14 +23,14 @@ on:
         default: 37
         required: false
         type: number
-      closure-days:
-        description: How many days before an idle issue/PR is closed
-        default: -1
-        required: false
-        type: number
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
 
 jobs:
   idle:
+    if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/stale@v5

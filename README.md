@@ -45,6 +45,12 @@ This reusable action depends on the following actions:
 
 The action has the following inputs:
 
+### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required. (`type:string`)
+
 ### label
 
 If your repository uses a label named anything other than `rebase needed 🚧` (for example, the repository may use `merge conflicts`), you can set the label here.
@@ -82,6 +88,8 @@ on:
 jobs:
   pr-needs-rebase:
     uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+    with:
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -101,6 +109,7 @@ jobs:
     uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
     with:
       label: "rebase needed :construction:"
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -117,29 +126,34 @@ This reusable action depends on the following actions:
 
 The action has the following inputs:
 
-### label
+### target-repo
 
-If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
-- This `input` is optional with a default of `🐌 idle`
-
-### comment
-
-When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know.  This can be changed to whatever the repository desires, or left blank if no comment should be added.  If `closure-days` is set, this is highly recommended to ensure the author knows their issue or PR will be closed.
-
-- This `input` is optional with a default of an empty string
-
-### stale-days
-
-The number of days before the issue or pull request is considered idle and the label and/or comment is applied.
-
-- This `input` is optional with a default of 37
+- This `input` is required. (`type:string`)
 
 ### closure-days
 
 The number of days before the idle issue or pull request is closed.  Set to -1 to disable.
 
 - This `input` is optional with a default of -1
+### comment
+
+When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know.  This can be changed to whatever the repository desires, or left blank if no comment should be added.  If `closure-days` is set, this is highly recommended to ensure the author knows their issue or PR will be closed.
+
+- This `input` is optional with a default of an empty string
+
+### label
+
+If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
+
+- This `input` is optional with a default of `🐌 idle`
+
+### stale-days
+
+The number of days before the issue or pull request is considered idle and the label and/or comment is applied.
+
+- This `input` is optional with a default of 37
 
 ## Secrets
 
@@ -166,6 +180,8 @@ on:
 jobs:
   mark-as-idle:
     uses: mdn/workflows/.github/workflows/mark-as-idle.yml@main
+    with:
+      target-repo: ${{ input.target_repo }}
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -185,6 +201,7 @@ jobs:
     uses: mdn/workflows/.github/workflows/mark-as-idle.yml@main
     with:
       label: "stale"
+      target-repo: ${{ input.target_repo }}
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -213,6 +230,14 @@ This reusable action depends on the following actions:
 - [GoogleCloudPlatform/release-please-action](https://github.com/googleapis/release-please)
 - [checkout](https://github.com/marketplace/actions/checkout)
 - [actions/setup-node](https://github.com/actions/setup-node)
+
+## Required inputs
+
+### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required. (`type:string`)
 
 ## Inputs
 
@@ -278,6 +303,8 @@ on:
 jobs:
   publish-release:
     uses:  mdn/workflows/.github/workflows/publish-release.yml@main
+    with:
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -298,6 +325,7 @@ jobs:
     uses:  mdn/workflows/.github/workflows/publish-release.yml@main
     with:
       release-type: python
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -318,8 +346,73 @@ jobs:
     uses:  mdn/workflows/.github/workflows/publish-release.yml@main
     with:
       npm-publish: false
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+## label-new-issues
+
+The `label-new-issues` reusable action is located in `.github/workflows/new-issues.yml`.
+
+This reusable action depends on the following actions:
+
+- [andymckay/labeler](https://github.com/marketplace/actions/simple-issue-labeler)
+
+### Required inputs
+
+#### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required.
+
+### Optional inputs
+
+The action has the following inputs:
+
+#### add-labels
+
+Labels to add as a comma separated list.
+
+- This `input` is optional with a default of `needs-triage`.
+### Usage
+
+In the repository that will call this action, you will need to add a `.github/workflows/new-issues.yml` file with the following content:
+
+```yml
+name: "Mark new issues with specified label(s)"
+
+on:
+  issues:
+    types:
+      - reopened
+      - opened
+
+jobs:
+  label-new-issues:
+    uses: mdn/workflows/.github/workflows/new-issues.yml@main
+      with:
+        target-repo: "mdn/workflows"
+```
+
+#### Overriding some defaults
+
+```yml
+name: "Mark new issues with specified label(s)"
+
+on:
+  issues:
+    types:
+      - reopened
+      - opened
+
+jobs:
+  label-new-issues:
+    uses: mdn/workflows/.github/workflows/new-issues.yml@main
+      with:
+        add-labels: "triage, bug"
+        target-repo: "mdn/workflows"
 ```
 
 ## set-default-labels
@@ -330,6 +423,22 @@ This reusable action depends on the following actions:
 
 - [checkout](https://github.com/marketplace/actions/checkout)
 - [lannonbr/issue-label-manager-action](https://github.com/marketplace/actions/issue-label-manager-action)
+
+## Required inputs
+
+### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required. (`type:string`)
+
+## Optional inputs
+
+The action has the following inputs:
+
+### should-delete-labels
+
+This is an optional `boolean` input that is `false` by default. If set to `true`, the action will delete any existing labels that are not listed in the JSON file mentioned previously.
 
 ### Usage
 
@@ -359,25 +468,8 @@ on: [workflow_dispatch]
 jobs:
   set-default-labels:
     uses: mdn/workflows/.github/workflows/set-default-labels.yml@main
-```
-
-### Inputs
-
-The action has the following inputs:
-
-#### should-delete-labels
-
-This is an optional `boolean` input that is `false` by default. If set to `true`, the action will delete any existing labels that are not listed in the JSON file mentioned previously.
-
-```yml
-name: set-default-labels
-on: [workflow_dispatch]
-
-jobs:
-  set-default-labels:
-    uses: mdn/workflows/.github/workflows/set-default-labels.yml@main
     with:
-      should-delete-labels: true
+      target-repo: "mdn/workflows"
 ```
 
 Because of the nature of this action, it must be run manually. You can learn more about [manually running actions on GitHub](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow).
