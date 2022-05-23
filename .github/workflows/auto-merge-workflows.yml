@@ -3,6 +3,8 @@ on: [pull_request_target]
 
 jobs:
   auto-merge:
-    uses:  mdn/workflows/.github/workflows/auto-merge.yml@main
+    uses: mdn/workflows/.github/workflows/auto-merge.yml@main
+    with:
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
