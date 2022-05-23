@@ -18,33 +18,34 @@ This reusable action depends on the following actions:
 - [checkout](https://github.com/marketplace/actions/checkout)
 - [dependabot-auto-merge](https://github.com/marketplace/actions/dependabot-auto-merge)
 
-## Inputs
-
-The action has the following inputs:
-
-### auto-approve
-
-Automatically approve pull-requests.
-
-- This `input` is optional with a default of `true` (`type:boolean`).
-
-### command
-
-The command to pass to Dependabot.
-
-- This `input` is optional with a default of `"squash and merge"` (`type:string`).
-
-### target
-
-The version comparison target. One off major, minor, or patch.
-
-- This `input` is optional with a default of `minor` (`type:string`).
+## Required inputs
 
 ### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
 - This `input` is required
+## Optional inputs
+
+The action has the following optional inputs:
+
+### auto-approve
+
+Automatically approve pull-requests.
+
+- This `input` is optional with a default of `true`.
+
+### command
+
+The command to pass to Dependabot.
+
+- This `input` is optional with a default of `squash and merge`.
+
+### target
+
+The version comparison target. One off major, minor, or patch.
+
+- This `input` is optional with a default of `minor`.
 
 ## Usage
 
@@ -76,7 +77,6 @@ jobs:
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
     with:
       auto-approve: false
-      command: "merge"
       target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
