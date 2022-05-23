@@ -137,12 +137,6 @@ Specify the target repository this action should run on. This is used to prevent
 
 ### Optional inputs
 
-#### comment
-
-When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know.  This can be changed to whatever the repository desires, or left blank if no comment should be added.  
-
-- This `input` is optional with a default of an empty string
-
 #### label
 
 If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
@@ -192,8 +186,6 @@ jobs:
     with:
       label: "stale"
       target-repo: ${{ input.target_repo }}
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
 ## lock-closed
