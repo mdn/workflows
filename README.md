@@ -18,9 +18,39 @@ This reusable action depends on the following actions:
 - [checkout](https://github.com/marketplace/actions/checkout)
 - [dependabot-auto-merge](https://github.com/marketplace/actions/dependabot-auto-merge)
 
-### Usage
+## Inputs
+
+The action has the following inputs:
+
+### auto-approve
+
+Automatically approve pull-requests.
+
+- This `input` is optional with a default of `true` (`type:boolean`).
+
+### command
+
+The command to pass to Dependabot.
+
+- This `input` is optional with a default of `"squash and merge"` (`type:string`).
+
+### target
+
+The version comparison target. One off major, minor, or patch.
+
+- This `input` is optional with a default of `minor` (`type:string`).
+
+### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required
+
+## Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/auto-merge.yml` file with the following content:
+
+### With defaults
 
 ```yml
 name: "auto-merge"
@@ -28,7 +58,26 @@ on: [pull_request_target]
 
 jobs:
   auto-merge:
-    uses:  mdn/workflows/.github/workflows/auto-merge.yml@main
+    uses: mdn/workflows/.github/workflows/auto-merge.yml@main
+    with:
+      target-repo: "mdn/workflows"
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+### Overriding some defaults
+
+```yml
+name: "auto-merge"
+on: [pull_request_target]
+
+jobs:
+  auto-merge:
+    uses: mdn/workflows/.github/workflows/auto-merge.yml@main
+    with:
+      auto-approve: false
+      command: "merge"
+      target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
@@ -53,7 +102,7 @@ If your repository uses a label named anything other than `rebase needed 🚧` (
 
 ### comment
 
-When a rebase is needed, the action will write a comment on the pull request to let the PR author know there are merge conflicts.  This can be changed to whatever the repository desires, or left blank if no comment should be added.
+When a rebase is needed, the action will write a comment on the pull request to let the PR author know there are merge conflicts. This can be changed to whatever the repository desires, or left blank if no comment should be added.
 
 - This `input` is optional with a default of `"This pull request has merge conflicts that must be resolved before we can merge this."`
 
@@ -125,7 +174,7 @@ If your repository uses a label named anything other than `🐌 idle` (for examp
 
 ### comment
 
-When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know.  This can be changed to whatever the repository desires, or left blank if no comment should be added.  If `closure-days` is set, this is highly recommended to ensure the author knows their issue or PR will be closed.
+When the issue or pull request becomes stale, the action will write a comment on the pull request to let the author know. This can be changed to whatever the repository desires, or left blank if no comment should be added. If `closure-days` is set, this is highly recommended to ensure the author knows their issue or PR will be closed.
 
 - This `input` is optional with a default of an empty string
 
@@ -137,7 +186,7 @@ The number of days before the issue or pull request is considered idle and the l
 
 ### closure-days
 
-The number of days before the idle issue or pull request is closed.  Set to -1 to disable.
+The number of days before the idle issue or pull request is closed. Set to -1 to disable.
 
 - This `input` is optional with a default of -1
 
@@ -201,7 +250,6 @@ This reusable action depends on the following actions:
 > **Note:** The workflow is a copy of the default example: https://github.com/dessant/lock-threads#examplesis.
 > Usage, inputs, outputs, and amples are well documented in https://github.com/dessant/lock-threads
 
-
 ## publish-release
 
 The `publish-release` GitHub Action automates publication of a new release on GitHub, updates the changelog and also publishes to the NPM registry.
@@ -217,6 +265,7 @@ This reusable action depends on the following actions:
 ## Inputs
 
 The action has the following inputs:
+
 ### release-type
 
 This is can be one of the release types as [detailed in the release please docs](https://github.com/googleapis/release-please#release-types-supported).
@@ -237,7 +286,7 @@ Whether to publish the package to the NPM registry.
 
 ### npm-publish-args
 
-Arguments to pass to the `npm publish` command.  This is ignored if `npm-publish` is set to `false`.
+Arguments to pass to the `npm publish` command. This is ignored if `npm-publish` is set to `false`.
 
 - This `input` is optional with a default of an empty string
 
@@ -277,7 +326,7 @@ on:
 
 jobs:
   publish-release:
-    uses:  mdn/workflows/.github/workflows/publish-release.yml@main
+    uses: mdn/workflows/.github/workflows/publish-release.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -295,7 +344,7 @@ on:
 
 jobs:
   publish-release:
-    uses:  mdn/workflows/.github/workflows/publish-release.yml@main
+    uses: mdn/workflows/.github/workflows/publish-release.yml@main
     with:
       release-type: python
     secrets:
@@ -315,7 +364,7 @@ on:
 
 jobs:
   publish-release:
-    uses:  mdn/workflows/.github/workflows/publish-release.yml@main
+    uses: mdn/workflows/.github/workflows/publish-release.yml@main
     with:
       npm-publish: false
     secrets:
