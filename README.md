@@ -18,40 +18,41 @@ This reusable action depends on the following actions:
 - [checkout](https://github.com/marketplace/actions/checkout)
 - [dependabot-auto-merge](https://github.com/marketplace/actions/dependabot-auto-merge)
 
-## Required inputs
+### Inputs
+### Required inputs
 
-### target-repo
+#### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
 - This `input` is required
-## Optional inputs
+### Optional inputs
 
 The action has the following optional inputs:
 
-### auto-approve
+#### auto-approve
 
 Automatically approve pull-requests.
 
 - This `input` is optional with a default of `true`.
 
-### command
+#### command
 
 The command to pass to Dependabot.
 
 - This `input` is optional with a default of `squash and merge`.
 
-### target
+#### target
 
 The version comparison target. One off major, minor, or patch.
 
 - This `input` is optional with a default of `minor`.
 
-## Usage
+### Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/auto-merge.yml` file with the following content:
 
-### With defaults
+#### With defaults
 
 ```yml
 name: "auto-merge"
@@ -66,7 +67,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-### Overriding some defaults
+#### Overriding some defaults
 
 ```yml
 name: "auto-merge"
@@ -90,15 +91,15 @@ This reusable action depends on the following actions:
 
 - [actions-label-merge-conflict](https://github.com/marketplace/actions/label-conflicting-pull-requests)
 
-### Required inputs
+### Inputs
 
 The action has the following inputs:
-
+### Required inputs
 #### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
-- This `input` is required. (`type:string`)
+- This `input` is required.
 
 ### Optional inputs
 #### label
@@ -111,7 +112,7 @@ If your repository uses a label named anything other than `rebase needed 🚧` (
 
 When a rebase is needed, the action will write a comment on the pull request to let the PR author know there are merge conflicts. This can be changed to whatever the repository desires, or left blank if no comment should be added.
 
-- This `input` is optional with a default of `"This pull request has merge conflicts that must be resolved before we can merge this."`
+- This `input` is optional with a default of `This pull request has merge conflicts that must be resolved before it can be merged.`
 
 ### Secrets
 
@@ -144,7 +145,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-####S Overriding some defaults
+#### Overriding some defaults
 
 ```yml
 name: "PR Needs Rebase"
@@ -158,15 +159,15 @@ jobs:
   pr-needs-rebase:
     uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
     with:
-      label: "rebase needed :construction:"
+      comment: "This pull requests has merge conflicts that needs to be resolved before being merged. Thank you."
       target-repo: "mdn/workflows"
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-## idle-issues
+## idle
 
-The `idle-issues` reusable action is located in `.github/workflows/idle.yml`.
+The `idle` reusable action is located in `.github/workflows/idle.yml`.
 
 > **NOTE:** We currently use this action to label issues only. We do not automatically close issues or pull requests using this action.
 
@@ -174,15 +175,15 @@ This reusable action depends on the following actions:
 
 - [stale](https://github.com/marketplace/actions/close-stale-issues)
 
-### Required inputs
+### Inputs
 
 The action has the following inputs:
-
-### target-repo
+### Required inputs
+#### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
-- This `input` is required. (`type:string`)
+- This `input` is required.
 
 ### Optional inputs
 
@@ -246,8 +247,61 @@ This reusable action depends on the following actions:
 
 - [dessant/lock-threads@v3](https://github.com/dessant/lock-threads)
 
-> **Note:** The workflow is a copy of the default example: https://github.com/dessant/lock-threads#examplesis.
-> Usage, inputs, outputs, and amples are well documented in https://github.com/dessant/lock-threads
+### Inputs
+
+The action has the following inputs:
+### Required inputs
+#### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required.
+
+### Optional inputs
+
+#### issue-inactive-days
+
+The number of days before an issue is considered inactive.
+
+- This `input` is optional with a default of 365
+### Usage
+
+In the repository that will call this action, you will need to add a `.github/workflows/lock-closed.yml` file with the following content:
+
+#### With defaults
+
+```yml
+name: "Lock inactive issues and pull requests"
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  lock-closed:
+    uses: mdn/workflows/.github/workflows/lock-closed.yml@main
+    with:
+      target-repo: "mdn/workflows"
+```
+
+#### Overriding default inactive days
+
+```yml
+name: "Lock inactive issues and pull requests"
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  lock-closed:
+    uses: mdn/workflows/.github/workflows/lock-closed.yml@main
+    with:
+      issue-inactive-days: 42
+      target-repo: "mdn/workflows"
+```
 
 ## publish-release
 
@@ -263,15 +317,16 @@ This reusable action depends on the following actions:
 
 ### Required inputs
 
+The action has the following inputs:
+
 #### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
 
-- This `input` is required. (`type:string`)
+- This `input` is required.
 
 ### Optional inputs
 
-The action has the following inputs:
 #### release-type
 
 This is can be one of the release types as [detailed in the release please docs](https://github.com/googleapis/release-please#release-types-supported).
@@ -381,9 +436,9 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-## label-new-issues
+## new-issues
 
-The `label-new-issues` reusable action is located in `.github/workflows/new-issues.yml`.
+The `new-issues` reusable action is located in `.github/workflows/new-issues.yml`.
 
 This reusable action depends on the following actions:
 
@@ -409,6 +464,8 @@ Labels to add as a comma separated list.
 ### Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/new-issues.yml` file with the following content:
+
+#### With defaults
 
 ```yml
 name: "Mark new issues with specified label(s)"
@@ -456,6 +513,7 @@ This reusable action depends on the following actions:
 
 ### Required inputs
 
+The action has the following inputs:
 #### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
@@ -463,9 +521,6 @@ Specify the target repository this action should run on. This is used to prevent
 - This `input` is required. (`type:string`)
 
 ### Optional inputs
-
-The action has the following inputs:
-
 #### should-delete-labels
 
 This is an optional `boolean` input that is `false` by default. If set to `true`, the action will delete any existing labels that are not listed in the JSON file mentioned previously.
@@ -491,6 +546,8 @@ In the repository that will call this action, you will need to create the follow
 
 You can find more details about the above on the [issue-label-manager-action documentation](https://github.com/marketplace/actions/issue-label-manager-action#issue-label-manager-action). The next item you need to create in the repository that will call this action, is a workflow file. You can name the file `.github/workflows/set-default-labels.yml` and add the following content:
 
+#### With defaults
+
 ```yml
 name: set-default-labels
 on: [workflow_dispatch]
@@ -500,6 +557,20 @@ jobs:
     uses: mdn/workflows/.github/workflows/set-default-labels.yml@main
     with:
       target-repo: "mdn/workflows"
+```
+
+#### Overriding some defaults
+
+```yml
+name: set-default-labels
+on: [workflow_dispatch]
+
+jobs:
+  set-default-labels:
+    uses: mdn/workflows/.github/workflows/set-default-labels.yml@main
+    with:
+      target-repo: "mdn/workflows"
+      should-delete-labels: true
 ```
 
 Because of the nature of this action, it must be run manually. You can learn more about [manually running actions on GitHub](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow).

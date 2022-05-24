@@ -14,7 +14,7 @@ on:
         type: string
       comment:
         description: The comment to write when a rebase is needed
-        default: "This pull request has merge conflicts that must be resolved before we can merge this."
+        default: "This pull request has merge conflicts that must be resolved before it can be merged."
         required: false
         type: string
     secrets:

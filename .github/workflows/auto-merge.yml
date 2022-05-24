@@ -29,7 +29,7 @@ on:
 
 jobs:
   auto-merge:
-    if: github.repository == ${{ inputs.target-repo }}
+    if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
