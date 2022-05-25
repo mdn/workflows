@@ -430,3 +430,82 @@ jobs:
 ```
 
 Because of the nature of this action, it must be run manually. You can learn more about [manually running actions on GitHub](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow).
+
+## json-lint
+
+The `json-lint` reusable action is located in `.github/workflows/json-lint.yml`. This workflow will use `eslint` to lint all JSON files in the target repository. You can alternatively filter by `paths`. More on this in the usage section.
+
+This reusable action depends on the following actions:
+
+- [checkout](https://github.com/marketplace/actions/checkout)
+- [setup-node](https://github.com/marketplace/actions/setup-node-js-environment)
+
+### Inputs
+
+### Required inputs
+
+#### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required
+
+### Optional inputs
+
+#### node-version
+
+The node version to setup and use.
+
+- This `input` is optional, with a default of 16.
+
+#### cache
+
+Which package manager cache to use.
+
+- This `input` is optional, with a default of yarn.
+
+### Usage
+
+#### With defaults
+
+```yml
+name: json-lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '*.json'
+      - .github/workflows/json-lint.yml
+
+jobs:
+  json-lint:
+    uses: mdn/workflows/.github/workflows/json-lint.yml@main
+    with:
+      target-repo: "mdn/workflows"
+```
+
+Above you can see how the [`paths` filter](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore) is being used to include specific files and file patterns.
+
+#### Overriding some defaults
+
+```yml
+name: json-lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '*.json'
+      - .github/workflows/json-lint.yml
+
+jobs:
+  json-lint:
+    uses: mdn/workflows/.github/workflows/json-lint.yml@main
+    with:
+      cache: "npm"
+      node-version: 18
+      target-repo: "mdn/workflows"
+```
