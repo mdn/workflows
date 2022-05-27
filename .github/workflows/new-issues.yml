@@ -1,12 +1,23 @@
-name: 'Mark new issues with needs-triage label'
+name: "Mark new issues with specified label(s)"
 
-on: [workflow_call]
+on: 
+  workflow_call:
+    target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+    add-labels:
+      description: Labels to add as a comma separated list.
+      default: "needs-triage"
+      required: false
+      type: string
 
 jobs:
   label-new-issues:
+    if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
       - name: initial labelling
-        uses: andymckay/labeler@e6c4322d0397f3240f0e7e30a33b5c5df2d39e90  # v1.0.4, as of 2021-11-26
+        uses: andymckay/labeler@v1.0.4
         with:
-          add-labels: "needs-triage"
+          add-labels: ${{ input.add-labels }}
