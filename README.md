@@ -738,3 +738,91 @@ jobs:
       node-version: 18
       target-repo: "mdn/workflows"
 ```
+
+## pre-check-redirect
+
+The `pre-check-redirect` reusable action is located in `.github/workflows/pre-check-redirect.yml`. This workflow uses the Yari [`content validate-redirects`](https://github.com/mdn/content/blob/main/package.json#L13) utility to [validate the redirects file(s)](https://github.com/mdn/yari/blob/main/tool/cli.js#L68). You can use the `paths` filter to only trigger this workflow for specific files or file patterns. More on this in the usage section.
+
+This reusable action depends on the following actions:
+
+- [checkout](https://github.com/marketplace/actions/checkout)
+- [setup-node](https://github.com/marketplace/actions/setup-node-js-environment)
+
+### Inputs
+
+### Required inputs
+
+#### target-repo
+
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+
+- This `input` is required
+
+### Optional inputs
+
+#### cache
+
+Which package manager cache to use.
+
+- This `input` is optional, with a default of yarn.
+
+#### node-version
+
+The node version to setup and use.
+
+- This `input` is optional, with a default of 16.
+
+#### target-locale
+
+The target locale for which to check the redirects file(s).
+
+- This `input` is optional, with a default of all locales in the repository.
+
+### Usage
+
+#### With defaults
+
+This will run for all locales in the target repository.
+
+```yml
+name: check-redirects
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - files/**
+      - .github/workflows/pr-check_redirects.yml
+
+jobs:
+  check-redirects:
+    uses: mdn/workflows/.github/workflows/pre-check-redirects.yml@main
+    with:
+      target-repo: "mdn/workflows"
+```
+
+#### Override some defaults
+
+Only run this for the `en-us` locale, using `npm` cache and Nodejs version `18`.
+
+```yml
+name: check-redirects
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - files/**
+      - .github/workflows/pr-check_redirects.yml
+
+jobs:
+  check-redirects:
+    uses: mdn/workflows/.github/workflows/pre-check-redirects.yml@main
+    with:
+      cahce: "npm"
+      node-version: 18
+      target-locale: "en-us"
+      target-repo: "mdn/workflows"
+```
