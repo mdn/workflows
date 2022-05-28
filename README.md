@@ -187,6 +187,12 @@ Specify the target repository this action should run on. This is used to prevent
 
 ### Optional inputs
 
+#### days-before-close
+
+If set to a non-negative number, issues and pull requests with the idle label will automatically be closed after the set number of days.
+
+- This `input` is optional with a default of -1
+
 #### label
 
 If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
