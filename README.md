@@ -11,6 +11,8 @@ The `auto-merge` reusable action is located in `.github/workflows/auto-merge.yml
 - `repo` for private repositories
 - `public_repo` for public repositories
 
+> NOTE: This only auto merges pull requests opened by [Dependabot](https://github.com/dependabot).
+
 In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named `GH_TOKEN` with the value of your Personal Access Token.
 
 This reusable action depends on the following actions:
@@ -23,7 +25,7 @@ This reusable action depends on the following actions:
 
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the workflow from running on forks of `mdn/workflows`.
 
 - This `input` is required
 ### Optional inputs
@@ -97,7 +99,7 @@ The action has the following inputs:
 ### Required inputs
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required.
 
@@ -181,7 +183,7 @@ The action has the following inputs:
 ### Required inputs
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required.
 
@@ -259,7 +261,7 @@ The action has the following inputs:
 ### Required inputs
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required.
 
@@ -327,7 +329,7 @@ The action has the following inputs:
 
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required.
 
@@ -454,7 +456,7 @@ This reusable action depends on the following actions:
 
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows``.
 
 - This `input` is required.
 
@@ -522,7 +524,7 @@ This reusable action depends on the following actions:
 The action has the following inputs:
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required. (`type:string`)
 
@@ -596,7 +598,7 @@ This reusable action depends on the following actions:
 
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required
 
@@ -675,7 +677,7 @@ This reusable action depends on the following actions:
 
 #### target-repo
 
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on `fork/workflows`.
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
 - This `input` is required
 
