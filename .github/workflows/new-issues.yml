@@ -19,6 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: initial labelling
-        uses: andymckay/labeler@v1
+        uses: andymckay/labeler@1.0.4
         with:
           add-labels: ${{ inputs.add-labels }}
