@@ -21,4 +21,4 @@ jobs:
       - name: initial labelling
         uses: andymckay/labeler@v1.0.4
         with:
-          add-labels: ${{ input.add-labels }}
+          add-labels: ${{ inputs.add-labels }}
