@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       cache:
-        description: Which package manager cache to use
+        description: The package manager cache to use.
         default: "yarn"
         required: false
         type: string
