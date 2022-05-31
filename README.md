@@ -741,7 +741,7 @@ jobs:
 
 ## pre-check-redirect
 
-The `pre-check-redirect` reusable action is located in `.github/workflows/pre-check-redirect.yml`. This workflow uses the Yari [`content validate-redirects`](https://github.com/mdn/content/blob/main/package.json#L13) utility to [validate the redirects file(s)](https://github.com/mdn/yari/blob/main/tool/cli.js#L68). You can use the `paths` filter to only trigger this workflow for specific files or file patterns. More on this in the usage section.
+The `pr-check-redirects` reusable action is located in `.github/workflows/pr-check-redirects.yml`. This workflow uses the Yari [`content validate-redirects`](https://github.com/mdn/content/blob/main/package.json#L13) utility to [validate the redirects file(s)](https://github.com/mdn/yari/blob/main/tool/cli.js#L68). You can use the `paths` filter to trigger this workflow only for specific files or file patterns. More on this in the usage section.
 
 This reusable action depends on the following actions:
 
