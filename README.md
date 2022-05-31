@@ -819,7 +819,7 @@ on:
 
 jobs:
   check-redirects:
-    uses: mdn/workflows/.github/workflows/pre-check-redirects.yml@main
+    uses: mdn/workflows/.github/workflows/pr-check-redirects.yml@main
     with:
       cahce: "npm"
       node-version: 18
