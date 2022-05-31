@@ -770,7 +770,7 @@ The package manager cache to use.
 
 The node version to setup and use.
 
-- This `input` is optional, with a default of 16.
+- This `input` is optional, with the default value `16`.
 
 #### target-locale
 
