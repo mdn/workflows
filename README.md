@@ -793,7 +793,7 @@ on:
       - main
     paths:
       - files/**
-      - .github/workflows/pr-check_redirects.yml
+      - .github/workflows/pr-check-redirects.yml
 
 jobs:
   check-redirects:
