@@ -762,7 +762,7 @@ Specify the target repository this action should run on. This is used to prevent
 
 #### cache
 
-Which package manager cache to use.
+The package manager cache to use.
 
 - This `input` is optional, with a default of yarn.
 
