@@ -776,7 +776,7 @@ The node version to setup and use.
 
 The target locale for which to check the redirects file(s).
 
-- This `input` is optional, with a default of all locales in the repository.
+- This `input` is optional. The default is all locales in the repository.
 
 ### Usage
 
