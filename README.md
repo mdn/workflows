@@ -131,7 +131,7 @@ In the repository that will call this action, you will need to add a `.github/wo
 #### With defaults
 
 ```yml
-name: "PR Needs Rebase"
+name: pr-rebase-needed
 
 on:
   push:
@@ -139,8 +139,8 @@ on:
     types: [synchronize]
 
 jobs:
-  pr-needs-rebase:
-    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+  pr-rebase-needed:
+    uses: mdn/workflows/.github/workflows/pr-rebase-needed.yml@main
     with:
       target-repo: "mdn/workflows"
     secrets:
@@ -150,7 +150,7 @@ jobs:
 #### Overriding some defaults
 
 ```yml
-name: "PR Needs Rebase"
+name: pr-rebase-needed
 
 on:
   push:
@@ -158,8 +158,8 @@ on:
     types: [synchronize]
 
 jobs:
-  pr-needs-rebase:
-    uses: mdn/workflows/.github/workflows/pr-needs-rebase.yml@main
+  pr-rebase-needed:
+    uses: mdn/workflows/.github/workflows/pr-rebase-needed.yml@main
     with:
       comment: "This pull requests has merge conflicts that needs to be resolved before being merged. Thank you."
       target-repo: "mdn/workflows"
