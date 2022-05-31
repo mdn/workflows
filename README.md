@@ -11,7 +11,7 @@ The `auto-merge` reusable action is located in `.github/workflows/auto-merge.yml
 - `repo` for private repositories
 - `public_repo` for public repositories
 
-> NOTE: This only auto merges pull requests opened by [Dependabot](https://github.com/dependabot).
+> NOTE: This action will auto merge only those pull requests that were opened by [Dependabot](https://github.com/dependabot).
 
 In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named `GH_TOKEN` with the value of your Personal Access Token.
 
