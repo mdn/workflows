@@ -764,7 +764,7 @@ Specify the target repository this action should run on. This is used to prevent
 
 The package manager cache to use.
 
-- This `input` is optional, with a default of yarn.
+- This `input` is optional, with the default value `yarn`.
 
 #### node-version
 
