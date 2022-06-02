@@ -1,0 +1,45 @@
+name: Check Redirects
+
+on:
+   workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      cache:
+        description: The package manager cache to use.
+        default: "yarn"
+        required: false
+        type: string
+      node-version:
+        description: The node version to setup and use.
+        default: 16
+        required: false
+        type: number
+      target-locale:
+        description: The target locale if required.
+        default: ""
+        required: false
+        type: string
+
+jobs:
+  check_redirects:
+    if: github.repository == inputs.target-repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.cache }}
+
+      - name: Install all yarn packages
+        run: |
+          yarn --frozen-lockfile
+
+      - name: Check redirects file(s)
+        run: yarn content validate-redirects ${{ inputs.target-locale }} --strict
