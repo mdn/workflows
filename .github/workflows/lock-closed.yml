@@ -1,6 +1,6 @@
 name: 'Lock old issues and pull requests'
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       target-repo:
         description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
