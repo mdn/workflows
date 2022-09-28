@@ -1,5 +1,18 @@
 name: markdown-lint
 
+# Used to run Markdownlint across all files in the repo.
+# Useful for PRs that touch the installed dependcies or Markdownlint configuration files
+# Sample trigger filter:
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - .markdownlint-cli2.jsonc
+#       - package.json
+#       - yarn.lock
+#       - .github/workflows/markdown-lint.yml
+
 on:
   workflow_call:
     inputs:
@@ -17,6 +30,16 @@ on:
         default: "yarn"
         required: false
         type: string
+      install-command:
+        description: The command to install the package dependencies.
+        default: "yarn --frozen-lockfile"
+        required: false
+        type: string
+      lint-command:
+        description: Which commmand or script used to invoke Markdown linting
+        default: "yarn lint:md"
+        required: false
+        type: string
 
 jobs:
   markdown-lint:
@@ -32,7 +55,10 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: ${{ inputs.cache }}
 
+      - name: Install packages
+        run: ${{ inputs.install-command }}
+
       - name: Lint Markdown files
         run: |
           echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"
-          npx markdownlint-cli '*.md' -i LICENSE.md -i CODE_OF_CONDUCT.md
+          ${{ inputs.lint-command }}
