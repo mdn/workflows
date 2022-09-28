@@ -1,0 +1,58 @@
+name: Lint YAML
+
+# Used to format all the Yaml files in the repository
+# The upstream would likly look like
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - yarn.lock
+#       - "**/*.yml"
+#       - .github/workflows/pr-check-yml.yml
+
+on:
+   workflow_call:
+    inputs:
+      cache:
+        description: The package manager cache to use.
+        default: "yarn"
+        required: false
+        type: string
+      node-version:
+        description: The node version to setup and use.
+        default: 16
+        required: false
+        type: number
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+
+      # Yarn calls
+      - name: Install all yarn packages
+        if: inputs.cache = 'yarn'
+        run: yarn --frozen-lockfile
+
+      - name: Lint markdown files
+        if: inputs.cache = 'yarn'
+        run: |
+          yarn lint:yml
+
+      # Alternate NPM calls
+      - name: Install all NPM packages
+        if: inputs.cache = 'npm'
+        run: npm ci
+
+      - name: Lint markdown files
+        if: inputs.cache = 'npm'
+        run: npm run lint:yml
