@@ -35,5 +35,4 @@ jobs:
 
       - name: Lint JSON files
         run: |
-          npm install --no-save eslint eslint-plugin-json
-          npx eslint . --ext .json
+          npx prettier -c "**/*.json"
