@@ -1,0 +1,74 @@
+name: Markdownlint (PR files)
+
+# Used to run linting only on the files changed in a PR.
+# This is useful in conjunction with the other global Markdownlint job,
+# which will test larger configuration changes across a repository.
+# A sample filter to only run the job when a PR touches a Markdown file
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - "**/*.md"
+
+on:
+   workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      node-version:
+        description: The node version to setup and use.
+        default: 16
+        required: false
+        type: number
+      cache:
+        description: Which package manager cache to use
+        default: "yarn"
+        required: false
+        type: string
+      install-command:
+        description: The command to install the package dependencies.
+        default: "yarn --frozen-lockfile"
+        required: false
+        type: string
+      changed-filter:
+        description: File filter glob to limit which changed files to lint
+        default: "**/*.md"
+        required: false
+        type: string
+      lint-command:
+        description: Which commmand or script used to invoke Markdown linting
+        default: "yarn markdownlint-cli2 ${files_to_lint}"
+        required: false
+        type: string
+
+jobs:
+  markdown-lint:
+    if: github.repository == ${{ inputs.target-repo }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v29.0.9
+        with:
+          files: ${{ inputs.changed-filter }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.cache }}
+
+      - name: Install packages
+        run: ${{ inputs.install-command }}
+
+      - name: Lint Markdown files
+        run: |
+          echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"
+          files_to_lint="${{ steps.changed-files.outputs.all_changed_files }}"
+          ${{ inputs.lint-command }}
