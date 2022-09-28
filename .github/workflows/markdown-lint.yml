@@ -34,4 +34,5 @@ jobs:
 
       - name: Lint Markdown files
         run: |
+          echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"
           npx markdownlint-cli '*.md' -i LICENSE.md -i CODE_OF_CONDUCT.md
