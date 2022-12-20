@@ -1,0 +1,42 @@
+name: "AlloAllo"
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - opened
+      - closed
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  allo-allo:
+    name: The MDN Web Docs welcome bot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: AlloAllo
+        uses: schalkneethling/allo-allo@main
+        with:
+          issueWelcome: |
+            It looks like this is your first issue. Welcome! 👋
+            One of the project maintainers will review the issue as soon as possible.
+            We appreciate your patience. To ensure the health of the project, please
+            take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
+          prWelcome: |
+            It looks like this is your first pull request. 🎉 Thank you for your contribution!
+            One of the project maintainers will triage and assign the pull request for review
+            as soon as possible. We appreciate your patience. To ensure the health of the project,
+            please take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
+          prMerged: |
+            Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
+            Did you know we have a [project board] with high-impact contribution opportunities?
+            We look forward to your next contribution.
+          token: ${{ secrets.GITHUB_TOKEN }}
