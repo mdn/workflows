@@ -1,15 +1,24 @@
 name: "AlloAllo"
 
 on:
-  issues:
-    types:
-      - opened
-  pull_request_target:
-    branches:
-      - main
-    types:
-      - opened
-      - closed
+  workflow_call:
+    inputs:
+      issue-welcome:
+        description: Message to show to a contributor opening their first issue.
+        required: false
+        type: string
+      pr-welcome:
+        description: Message to show to a contributor opening their first pull request.
+        required: false
+        type: string
+      pr-merged:
+        description: Message to show to a contributor after first merged pull request.
+        required: false
+        type: string
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -18,25 +27,15 @@ permissions:
 
 jobs:
   allo-allo:
+    if: github.repository == inputs.target-repo
     name: The MDN Web Docs welcome bot
     runs-on: ubuntu-latest
 
     steps:
       - name: AlloAllo
-        uses: schalkneethling/allo-allo@main
+        uses: mechanical-ink@main
         with:
-          issueWelcome: |
-            It looks like this is your first issue. Welcome! 👋
-            One of the project maintainers will review the issue as soon as possible.
-            We appreciate your patience. To ensure the health of the project, please
-            take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-          prWelcome: |
-            It looks like this is your first pull request. 🎉 Thank you for your contribution!
-            One of the project maintainers will triage and assign the pull request for review
-            as soon as possible. We appreciate your patience. To ensure the health of the project,
-            please take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-          prMerged: |
-            Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
-            Did you know we have a [project board] with high-impact contribution opportunities?
-            We look forward to your next contribution.
+          issueWelcome: ${{ inputs.issue-welcome }}
+          prWelcome: ${{ inputs.pr-welcome }}
+          prMerged: ${{ inputs.pr-merged }}
           token: ${{ secrets.GITHUB_TOKEN }}
