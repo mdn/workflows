@@ -1,0 +1,41 @@
+name: "AlloAllo"
+
+on:
+  workflow_call:
+    inputs:
+      issue-welcome:
+        description: Message to show to a contributor opening their first issue.
+        required: false
+        type: string
+      pr-welcome:
+        description: Message to show to a contributor opening their first pull request.
+        required: false
+        type: string
+      pr-merged:
+        description: Message to show to a contributor after first merged pull request.
+        required: false
+        type: string
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  allo-allo:
+    if: github.repository == inputs.target-repo
+    name: The MDN Web Docs welcome bot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: AlloAllo
+        uses: mechanical-ink/allo-allo@v1.0.1
+        with:
+          issueWelcome: ${{ inputs.issue-welcome }}
+          prWelcome: ${{ inputs.pr-welcome }}
+          prMerged: ${{ inputs.pr-merged }}
+          token: ${{ secrets.GITHUB_TOKEN }}
