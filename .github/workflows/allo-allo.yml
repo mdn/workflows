@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: AlloAllo
-        uses: mechanical-ink@main
+        uses: mechanical-ink/allo-allo@v1.0.1
         with:
           issueWelcome: ${{ inputs.issue-welcome }}
           prWelcome: ${{ inputs.pr-welcome }}
