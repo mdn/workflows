@@ -14,12 +14,12 @@ on:
         type: number
       label:
         description: The label to apply when the issue/PR is idle
-        default: "🐌 idle"
+        default: "idle"
         required: false
         type: string
       stale-days:
         description: How many days before the issue/PR is considered idle
-        default: 37
+        default: 30
         required: false
         type: number
 
