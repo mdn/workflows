@@ -179,8 +179,8 @@ This reusable action depends on the following actions:
 
 ### Inputs
 
-The action has the following inputs:
 ### Required inputs
+
 #### target-repo
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
@@ -197,15 +197,15 @@ If set to a non-negative number, issues and pull requests with the idle label wi
 
 #### label
 
-If your repository uses a label named anything other than `🐌 idle` (for example, the repository may want to use use `stale`), you can set the label here.
+If your repository uses a label named anything other than `idle` (for example, the repository may want to use use `stale`), you can set the label here.
 
-- This `input` is optional with a default of `🐌 idle`
+- This `input` is optional with a default of `idle`
 
 #### stale-days
 
 The number of days before the issue or pull request is considered idle and the label and/or comment is applied.
 
-- This `input` is optional with a default of 37
+- This `input` is optional with a default of 30
 
 ### Usage
 
