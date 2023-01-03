@@ -64,18 +64,18 @@ jobs:
     uses: mdn/workflows/.github/workflows/allo-allo.yml@main
     with:
       target-repo: "mdn/workflows"
-      issue-welcome: |
+      issue-welcome: >
         It looks like this is your first issue. Welcome! 👋
         One of the project maintainers will be with you as soon as possible. We
         appreciate your patience. To safeguard the health of the project, please
         take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-      pr-welcome: |
+      pr-welcome: >
         It looks like this is your first pull request. 🎉
         Thank you for your contribution! One of the project maintainers will triage
         and assign the pull request for review. We appreciate your patience. To
         safeguard the health of the project, please take a moment to read our
         [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-      pr-merged: |
+      pr-merged: >
         Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
         Did you know we have a [project board](https://github.com/orgs/mdn/projects/25) with high-impact contribution opportunities?
         We look forward to your next contribution.
@@ -124,7 +124,7 @@ jobs:
     uses: mdn/workflows/.github/workflows/allo-allo.yml@main
     with:
       target-repo: "mdn/workflows"
-      pr-welcome: |
+      pr-welcome: >
         It looks like this is your first pull request. 🎉
         Thank you for your contribution! One of the project maintainers will triage
         and assign the pull request for review. We appreciate your patience. To
@@ -151,7 +151,7 @@ jobs:
     uses: mdn/workflows/.github/workflows/allo-allo.yml@main
     with:
       target-repo: "mdn/workflows"
-      pr-merged: |
+      pr-merged: >
         Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
         Did you know we have a [project board](https://github.com/orgs/mdn/projects/25) with high-impact contribution opportunities?
         We look forward to your next contribution.
