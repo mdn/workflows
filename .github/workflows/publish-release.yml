@@ -66,6 +66,10 @@ jobs:
           registry-url: '${{ inputs.registry-url }}'
           cache: ${{ inputs.cache }}
         if: inputs.npm-publish && steps.release.outputs.release_created
+      - run: yarn install --frozen-lockfile
+        if: inputs.cache === 'yarn' && inputs.npm-publish && steps.release.outputs.release_created
+      - run: npm ci
+        if: inputs.cache === 'npm' && inputs.npm-publish && steps.release.outputs.release_created
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
           NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
