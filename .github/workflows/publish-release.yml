@@ -18,11 +18,6 @@ name: publish-release
         default: 16
         required: false
         type: number
-      package-manager:
-        description: The package manager used by the package (npm or yarn)
-        default: npm
-        required: false
-        type: string
       npm-publish:
         description: Whether to publish the package to npm
         default: true
@@ -65,10 +60,7 @@ jobs:
           node-version: '${{ inputs.node-version }}'
           registry-url: '${{ inputs.registry-url }}'
         if: inputs.npm-publish && steps.release.outputs.release_created
-      - run: yarn install --frozen-lockfile
-        if: inputs.npm-publish && steps.release.outputs.release_created && inputs.package-manager == 'yarn'
       - run: npm ci
-        if: inputs.npm-publish && steps.release.outputs.release_created && inputs.package-manager == 'npm'
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
           NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
