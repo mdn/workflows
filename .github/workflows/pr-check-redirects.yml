@@ -1,7 +1,7 @@
 name: Check Redirects
 
 on:
-   workflow_call:
+  workflow_call:
     inputs:
       target-repo:
         description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
@@ -14,7 +14,7 @@ on:
         type: string
       node-version:
         description: The node version to setup and use.
-        default: 16
+        default: 18
         required: false
         type: number
       target-locale:
