@@ -61,6 +61,7 @@ jobs:
           registry-url: '${{ inputs.registry-url }}'
         if: inputs.npm-publish && steps.release.outputs.release_created
       - run: npm ci
+        if: inputs.npm-publish && steps.release.outputs.release_created
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
           NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
