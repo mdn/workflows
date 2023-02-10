@@ -60,7 +60,7 @@ jobs:
           node-version: '${{ inputs.node-version }}'
           registry-url: '${{ inputs.registry-url }}'
         if: inputs.npm-publish && steps.release.outputs.release_created
-      - run: yarn install --frozen-lockfile
+      - run: npm ci
         if: inputs.npm-publish && steps.release.outputs.release_created
       - run: 'npm publish ${{ inputs.npm-publish-args }}'
         env:
