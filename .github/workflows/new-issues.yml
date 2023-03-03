@@ -9,7 +9,7 @@ on:
         type: string
       add-labels:
         description: Labels to add as a comma separated list.
-        default: "needs-triage"
+        default: "needs triage"
         required: false
         type: string
 
