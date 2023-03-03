@@ -1,15 +1,15 @@
-name: "PR Needs Rebase"
+name: "PR merge conflicts"
 
 on:
   workflow_call:
     inputs:
       target-repo:
-          description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
-          required: true
-          type: string
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
       label:
         description: The label to apply when a rebase is needed
-        default: "rebase needed :construction:"
+        default: "merge conflicts :construction:"
         required: false
         type: string
       comment:
@@ -19,7 +19,7 @@ on:
         type: string
     secrets:
       GH_TOKEN:
-        description: 'Personal access token passed from the caller workflow'
+        description: "Personal access token passed from the caller workflow"
         required: true
 
 jobs:
