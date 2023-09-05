@@ -53,7 +53,7 @@ jobs:
           token: "${{ secrets.GH_TOKEN }}"
           release-type: "${{ inputs.release-type }}"
           package-name: release-please-action
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: inputs.npm-publish && steps.release.outputs.release_created
       - uses: actions/setup-node@v3
         with:

@@ -32,7 +32,7 @@ jobs:
     if: github.repository == inputs.target-repo && github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ahmadnassri/action-dependabot-auto-merge@v2.6
         with:
           approve: ${{ inputs.auto-approve }}
