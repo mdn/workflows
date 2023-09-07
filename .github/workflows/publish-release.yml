@@ -1,5 +1,5 @@
 name: publish-release
-'on':
+"on":
   workflow_call:
     inputs:
       target-repo:
@@ -15,7 +15,7 @@ name: publish-release
         type: string
       node-version:
         description: The Nodejs version to use
-        default: 12
+        default: 18
         required: false
         type: number
       npm-publish:
@@ -27,12 +27,12 @@ name: publish-release
         description: >-
           Arguments passed to `npm publish` command; ignored if "npm-publish" is
           false
-        default: ''
+        default: ""
         required: false
         type: string
       registry-url:
         description: The registry to publish to
-        default: 'https://registry.npmjs.org'
+        default: "https://registry.npmjs.org"
         required: false
         type: string
     secrets:
@@ -47,22 +47,22 @@ jobs:
     if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v3.3.0
+      - uses: GoogleCloudPlatform/release-please-action@v3.7.11
         id: release
         with:
-          token: '${{ secrets.GH_TOKEN }}'
-          release-type: '${{ inputs.release-type }}'
+          token: "${{ secrets.GH_TOKEN }}"
+          release-type: "${{ inputs.release-type }}"
           package-name: release-please-action
       - uses: actions/checkout@v3
         if: inputs.npm-publish && steps.release.outputs.release_created
       - uses: actions/setup-node@v3
         with:
-          node-version: '${{ inputs.node-version }}'
-          registry-url: '${{ inputs.registry-url }}'
+          node-version: "${{ inputs.node-version }}"
+          registry-url: "${{ inputs.registry-url }}"
         if: inputs.npm-publish && steps.release.outputs.release_created
-      - run: yarn install --frozen-lockfile
+      - run: npm ci
         if: inputs.npm-publish && steps.release.outputs.release_created
-      - run: 'npm publish ${{ inputs.npm-publish-args }}'
+      - run: "npm publish ${{ inputs.npm-publish-args }}"
         env:
-          NODE_AUTH_TOKEN: '${{secrets.NPM_AUTH_TOKEN}}'
+          NODE_AUTH_TOKEN: "${{secrets.NPM_AUTH_TOKEN}}"
         if: inputs.npm-publish && steps.release.outputs.release_created
