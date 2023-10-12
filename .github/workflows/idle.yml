@@ -22,20 +22,20 @@ on:
         default: 30
         required: false
         type: number
-      close-issue-meesage:
-        description: The comment message will be added to the issues when closing it automatically.
+      close-issue-message:
+        description: Comment to add when a stale issue is closed.
         required: false
         type: string
       stale-issue-message:
-        description: The comment message will be added to the issue when staling it automatically.
+        description: Comment to add when an issue becomes stale.
         required: false
         type: string
       close-pr-message:
-        description: The comment message will be added to the PR when closing it automatically.
+        description: Comment to add when a stale PR is closed.
         required: false
         type: string
       stale-pr-message:
-        description: The comment message will be added to the PR when staling it automatically.
+        description: Comment to add when a PR becomes stale.
         required: false
         type: string
 
@@ -50,7 +50,7 @@ jobs:
           days-before-close: ${{ inputs.days-before-close }}
           stale-issue-label: ${{ inputs.label }}
           stale-pr-label: ${{ inputs.label }}
-          close-issue-meesage: ${{ inputs.close-issue-meesage }}
+          close-issue-message: ${{ inputs.close-issue-message }}
           stale-issue-message: ${{ inputs.stale-issue-message }}
           close-pr-message: ${{ inputs.close-pr-message }}
           stale-pr-message: ${{ inputs.stale-pr-message }}
