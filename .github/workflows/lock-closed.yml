@@ -24,6 +24,6 @@ jobs:
     if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/lock-threads@v4
+      - uses: dessant/lock-threads@v5
         with:
           issue-inactive-days: ${{ inputs.issue-inactive-days }}
