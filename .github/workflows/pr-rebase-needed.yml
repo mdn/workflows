@@ -12,11 +12,6 @@ on:
         default: "merge conflicts :construction:"
         required: false
         type: string
-      comment:
-        description: The comment to write when a rebase is needed
-        default: "This pull request has merge conflicts that must be resolved before it can be merged."
-        required: false
-        type: string
     secrets:
       GH_TOKEN:
         description: "Personal access token passed from the caller workflow"
@@ -32,4 +27,3 @@ jobs:
         with:
           dirtyLabel: ${{ inputs.label }}
           repoToken: "${{ secrets.GH_TOKEN }}"
-          commentOnDirty: ${{ inputs.comment }}
