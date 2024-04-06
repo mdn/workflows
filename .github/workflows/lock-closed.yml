@@ -1,8 +1,16 @@
 name: 'Lock old issues and pull requests'
 on:
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      issue-inactive-days:
+        description: The number of days before an issue is considered inactive.
+        default: "365"
+        required: false
+        type: string
 
 permissions:
   issues: write
@@ -12,7 +20,10 @@ concurrency:
   group: lock
 
 jobs:
-  action:
+  lock-closed:
+    if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/lock-threads@v3
+      - uses: dessant/lock-threads@v5
+        with:
+          issue-inactive-days: ${{ inputs.issue-inactive-days }}

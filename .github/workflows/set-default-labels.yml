@@ -1,0 +1,26 @@
+name: set-default-labels
+
+on:
+  workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      should-delete-labels:
+        description: 'Delete labels that are not in the list'
+        default: false
+        required: false
+        type: boolean
+
+jobs:
+  set-default-labels:
+    if: github.repository == inputs.target-repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lannonbr/issue-label-manager-action@4.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          delete: ${{ inputs.should-delete-labels }}
