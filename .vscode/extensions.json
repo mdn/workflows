@@ -1,0 +1,20 @@
+{
+    
+    "recommendations": [
+    
+   
+    {
+        "recommendations": [
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint"
+        ]
+    } {
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+    ],
+    "unwantedRecommendations": [
+        "aaron-bond.better-comments"
+    ]
+}"ms-vscodeemote-server"   
+}
