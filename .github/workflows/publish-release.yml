@@ -47,7 +47,7 @@ jobs:
     if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v4.1.1
+      - uses: GoogleCloudPlatform/release-please-action@v4.1.3
         id: release
         with:
           token: "${{ secrets.GH_TOKEN }}"
