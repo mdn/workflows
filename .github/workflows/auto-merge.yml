@@ -29,7 +29,7 @@ on:
 
 jobs:
   auto-merge:
-    if: github.repository == inputs.target-repo && github.actor == 'dependabot[bot]'
+    if: github.repository == inputs.target-repo && github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
