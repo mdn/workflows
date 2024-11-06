@@ -7,7 +7,6 @@ Reusable GitHub Actions workflows for use in MDN repositories.
 - [allo-allo](.github/workflows/allo-allo.yml) ([docs](docs/allo-allo.md)) - a welcome bot for new contributors
 - [auto-merge](.github/workflows/auto-merge.yml) ([docs](docs/auto-merge.md)) - automatically merge pull requests
 - [idle](.github/workflows/idle.yml) ([docs](docs/idle.md)) - mark issues and pull requests as idle
-- [json-lint](.github/workflows/json-lint.yml) ([docs](docs/json-lint.md)) - lint JSON files
 - [lock-closed](.github/workflows/lock-closed.yml) ([docs](docs/lock-closed.md)) - lock closed issues and pull requests
 - [markdown-lint](.github/workflows/markdown-lint.yml) ([docs](docs/markdown-lint.md)) - lint Markdown files
 - [new-issues](.github/workflows/new-issues.yml) ([docs](docs/new-issues.md)) - label new issues
