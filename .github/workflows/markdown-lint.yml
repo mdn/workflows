@@ -9,7 +9,7 @@ on:
         type: string
       node-version:
         description: The node version to setup and use.
-        default: 18
+        default: 20
         required: false
         type: number
       cache:
