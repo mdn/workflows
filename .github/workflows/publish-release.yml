@@ -15,7 +15,7 @@ name: publish-release
         type: string
       node-version:
         description: The Nodejs version to use
-        default: 18
+        default: 20
         required: false
         type: number
       npm-publish:
