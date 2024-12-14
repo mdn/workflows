@@ -12,7 +12,7 @@ on:
       - closed
 
 jobs:
-  allo-allo:
+  welcome-bot:
     uses: mdn/workflows/.github/workflows/welcome-bot.yml@main
     with:
       target-repo: "mdn/workflows"
