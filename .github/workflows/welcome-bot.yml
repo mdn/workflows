@@ -1,15 +1,25 @@
-name: "AlloAllo"
+name: welcome-bot
 
 on:
-  issues:
-    types:
-      - opened
-  pull_request_target:
-    branches:
-      - main
-    types:
-      - opened
-      - closed
+  workflow_call:
+    inputs:
+      target-repo:
+        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      issue-welcome:
+        description: Message to show to a contributor opening their first issue.
+        required: false
+        type: string
+      pr-welcome:
+        description: Message to show to a contributor opening their first pull request.
+        required: false
+        type: string
+
+permissions:
+  contents: none
+  issues: write
+  pull-requests: write
 
 permissions:
   # Post comment in issue.
@@ -18,22 +28,15 @@ permissions:
   pull-requests: write
 
 jobs:
-  allo-allo:
-    uses: mdn/workflows/.github/workflows/allo-allo.yml@main
-    with:
-      target-repo: "mdn/workflows"
-      issue-welcome: >
-        It looks like this is your first issue. Welcome! 👋
-        One of the project maintainers will be with you as soon as possible. We
-        appreciate your patience. To safeguard the health of the project, please
-        take a moment to read our [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-      pr-welcome: >
-        It looks like this is your first pull request. 🎉
-        Thank you for your contribution! One of the project maintainers will triage
-        and assign the pull request for review. We appreciate your patience. To
-        safeguard the health of the project, please take a moment to read our
-        [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-      pr-merged: >
-        Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
-        Did you know we have a [project board](https://github.com/orgs/mdn/projects/25) with high-impact contribution opportunities?
-        We look forward to your next contribution.
+  welcome-bot:
+    if: github.repository == inputs.target-repo
+    name: The MDN Web Docs welcome bot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: welcome-bot
+        uses: actions/first-interaction@v1.3.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: ${{ inputs.issue-welcome }}
+          pr-message: ${{ inputs.pr-welcome }}
