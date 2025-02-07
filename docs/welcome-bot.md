@@ -1,13 +1,13 @@
-# Allo-Allo
+# welcome-bot
 
-The `Allo-Allo` reusable action is located at [`.github/workflows/allo-allo.yml`](https://github.com/mdn/workflows/tree/main/.github/workflows/allo-allo.yml).
+The `welcome-bot` reusable action is located at [`.github/workflows/welcome-bot.yml`](https://github.com/mdn/workflows/tree/main/.github/workflows/welcome-bot.yml).
 
 This workflow is added to repositories to welcome new contributors and congratulate them on their first successful pull request merge.
 You can specify all three inputs or a single input depending on your needs.
 
 This reusable action depends on the following actions:
 
-- [Allo-Allo](https://github.com/mechanical-ink/allo-allo)
+- [welcome-bot](https://github.com/actions/first-interaction)
 
 ## Inputs
 
@@ -19,7 +19,7 @@ The action has the following inputs:
 
 Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the action from running on forks of `mdn/workflows`.
 
-- This `input` is required
+- This `input` is required.
 
 ### Optional inputs
 
@@ -35,18 +35,12 @@ Message to show to a contributor opening their first pull request.
 
 - This `input` is optional.
 
-#### pr-merged
-
-Message to show to a contributor after first merged pull request.
-
-- This `input` is optional.
-
 ## Usage
 
 The following will run on first issue creation, first opened pull request, and first merged pull request.
 
 ```yml
-name: "AlloAllo"
+name: welcome-bot
 
 on:
   issues:
@@ -60,8 +54,8 @@ on:
       - closed
 
 jobs:
-  allo-allo:
-    uses: mdn/workflows/.github/workflows/allo-allo.yml@main
+  welcome-bot:
+    uses: mdn/workflows/.github/workflows/welcome-bot.yml@main
     with:
       target-repo: "mdn/workflows"
       issue-welcome: >
@@ -75,10 +69,6 @@ jobs:
         and assign the pull request for review. We appreciate your patience. To
         safeguard the health of the project, please take a moment to read our
         [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-      pr-merged: >
-        Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
-        Did you know we have a [project board](https://github.com/orgs/mdn/projects/25) with high-impact contribution opportunities?
-        We look forward to your next contribution.
 ```
 
 ### Comment on first issue
@@ -86,7 +76,7 @@ jobs:
 The following will run on first issue creation.
 
 ```yml
-name: "AlloAllo"
+name: welcome-bot
 
 on:
   issues:
@@ -95,7 +85,7 @@ on:
 
 jobs:
   allo-allo:
-    uses: mdn/workflows/.github/workflows/allo-allo.yml@main
+    uses: mdn/workflows/.github/workflows/welcome-bot.yml@main
     with:
       target-repo: "mdn/workflows"
       issue-welcome: |
@@ -110,7 +100,7 @@ jobs:
 The following will run on first opened pull request.
 
 ```yml
-name: "AlloAllo"
+name: welcome-bot
 
 on:
   pull_request_target:
@@ -120,8 +110,8 @@ on:
       - opened
 
 jobs:
-  allo-allo:
-    uses: mdn/workflows/.github/workflows/allo-allo.yml@main
+  welcome-bot:
+    uses: mdn/workflows/.github/workflows/welcome-bot.yml@main
     with:
       target-repo: "mdn/workflows"
       pr-welcome: >
@@ -130,29 +120,4 @@ jobs:
         and assign the pull request for review. We appreciate your patience. To
         safeguard the health of the project, please take a moment to read our
         [code of conduct](../blob/main/CODE_OF_CONDUCT.md).
-```
-
-### Comment on first merged pull request
-
-The following will run on the first merged pull request.
-
-```yml
-name: "AlloAllo"
-
-on:
-  pull_request_target:
-    branches:
-      - main
-    types:
-      - closed
-
-jobs:
-  allo-allo:
-    uses: mdn/workflows/.github/workflows/allo-allo.yml@main
-    with:
-      target-repo: "mdn/workflows"
-      pr-merged: >
-        Congratulations on your first merged pull request. 🎉 Thank you for your contribution!
-        Did you know we have a [project board](https://github.com/orgs/mdn/projects/25) with high-impact contribution opportunities?
-        We look forward to your next contribution.
 ```
