@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: lannonbr/issue-label-manager-action@4.0.0
+      - uses: lannonbr/issue-label-manager-action@e8dbcd8198e86a1e98d5372e55db976fed9ba6f7 # v4.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
