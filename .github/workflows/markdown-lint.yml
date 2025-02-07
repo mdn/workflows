@@ -20,7 +20,7 @@ on:
 
 jobs:
   markdown-lint:
-    if: github.repository == ${{ inputs.target-repo }}
+    if: github.repository == inputs.target-repo
     runs-on: ubuntu-latest
 
     steps:
