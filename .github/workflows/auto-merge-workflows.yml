@@ -1,6 +1,10 @@
 name: "auto-merge"
 on: [pull_request_target]
 
+permissions:
+  # Approve and comment pull request.
+  pull-requests: write
+
 jobs:
   auto-merge:
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
