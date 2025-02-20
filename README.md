@@ -4,7 +4,6 @@ Reusable GitHub Actions workflows for use in MDN repositories.
 
 ## Available actions
 
-- [allo-allo](.github/workflows/allo-allo.yml) ([docs](docs/allo-allo.md)) - a welcome bot for new contributors
 - [auto-merge](.github/workflows/auto-merge.yml) ([docs](docs/auto-merge.md)) - automatically merge pull requests
 - [idle](.github/workflows/idle.yml) ([docs](docs/idle.md)) - mark issues and pull requests as idle
 - [lock-closed](.github/workflows/lock-closed.yml) ([docs](docs/lock-closed.md)) - lock closed issues and pull requests
