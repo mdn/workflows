@@ -27,7 +27,7 @@ Specify the target repository this action should run on. This is used to prevent
 
 The node version to setup and use.
 
-- This `input` is optional, with a default of `20`.
+- This `input` is optional, with a default of `22`.
 
 #### cache
 
@@ -77,6 +77,6 @@ jobs:
     uses: mdn/workflows/.github/workflows/markdown-lint.yml@main
     with:
       cache: "npm"
-      node-version: 20
+      node-version: 22
       target-repo: "mdn/workflows"
 ```

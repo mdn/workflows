@@ -36,7 +36,7 @@ This is can be one of the release types as [detailed in the release please docs]
 
 The version of Node.js to use for the release. This action supports all [active and maintenance releases](https://nodejs.org/en/about/releases/) of Node.js.
 
-- This `input` is optional with a default of `20`
+- This `input` is optional with a default of `22`
 
 #### npm-publish
 
