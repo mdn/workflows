@@ -52,7 +52,7 @@ jobs:
         with:
           token: "${{ secrets.GH_TOKEN }}"
           release-type: "${{ inputs.release-type }}"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: inputs.npm-publish && steps.release.outputs.release_created
         with:
           persist-credentials: false
