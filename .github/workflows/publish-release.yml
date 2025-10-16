@@ -43,7 +43,7 @@ name: publish-release
         description: Your NPM registry token
         required: false
 
-# No GITHUB_TOKEN permissions, as we don't use it.
+# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
 permissions: {}
 
 jobs:

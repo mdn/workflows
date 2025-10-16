@@ -22,7 +22,7 @@ on:
         description: "Personal access token passed from the caller workflow"
         required: true
 
-# No GITHUB_TOKEN permissions, as we don't use it.
+# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
 permissions: {}
 
 jobs:
