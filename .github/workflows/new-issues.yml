@@ -1,6 +1,6 @@
 name: "Mark new issues with specified label(s)"
 
-on: 
+on:
   workflow_call:
     inputs:
       target-repo:

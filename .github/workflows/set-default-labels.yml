@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       should-delete-labels:
-        description: 'Delete labels that are not in the list'
+        description: "Delete labels that are not in the list"
         default: false
         required: false
         type: boolean
