@@ -1,4 +1,4 @@
-name: 'Lock old issues and pull requests'
+name: "Lock old issues and pull requests"
 on:
   workflow_call:
     inputs:
