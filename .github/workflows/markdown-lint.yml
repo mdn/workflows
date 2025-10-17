@@ -18,6 +18,9 @@ on:
         required: false
         type: string
 
+# No GITHUB_TOKEN permissions, as we don't use it.
+permissions: {}
+
 jobs:
   markdown-lint:
     if: github.repository == inputs.target-repo

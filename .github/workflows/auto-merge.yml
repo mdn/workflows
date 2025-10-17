@@ -27,6 +27,9 @@ on:
         description: "Personal access token passed from the caller workflow"
         required: true
 
+# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
+permissions: {}
+
 jobs:
   auto-merge:
     if: github.repository == inputs.target-repo && github.event.pull_request.user.login == 'dependabot[bot]'

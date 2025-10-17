@@ -42,6 +42,10 @@ name: publish-release
       NPM_AUTH_TOKEN:
         description: Your NPM registry token
         required: false
+
+# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
+permissions: {}
+
 jobs:
   release-please:
     if: github.repository == inputs.target-repo

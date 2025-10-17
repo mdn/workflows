@@ -13,6 +13,10 @@ on:
         required: false
         type: string
 
+permissions:
+  # Label issues.
+  issues: write
+
 jobs:
   label-new-issues:
     if: github.repository == inputs.target-repo
