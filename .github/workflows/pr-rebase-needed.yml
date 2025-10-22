@@ -22,8 +22,10 @@ on:
         description: "Personal access token passed from the caller workflow"
         required: true
 
-# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
-permissions: {}
+# Avoid reducing GITHUB_TOKEN permissions, as most users pass this as GH_TOKEN.
+permissions:
+  # Label pull requests.
+  pull-requests: write
 
 jobs:
   label-rebase-needed:
