@@ -1,14 +1,30 @@
-name: "auto-merge"
-on: [pull_request_target]
+name: auto-merge
 
-permissions:
-  # Approve and comment pull request.
-  pull-requests: write
+on:
+  pull_request_target:
+    branches:
+      - main
+
+# No GITHUB_TOKEN permissions, because we use AUTOMERGE_TOKEN instead.
+permissions: {}
 
 jobs:
   auto-merge:
-    uses: mdn/workflows/.github/workflows/auto-merge.yml@main
-    with:
-      target-repo: "mdn/workflows"
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+
+    steps:
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b # v2.4.0
+        with:
+          github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+
+      - name: Squash and merge
+
+        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' && !startsWith(steps.dependabot-metadata.outputs.previous-version, '0.') || steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' && !startsWith(steps.dependabot-metadata.outputs.previous-version, '0.0.') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
+        run: |
+          gh pr review ${{ github.event.pull_request.html_url }} --approve 
+          gh pr comment ${{ github.event.pull_request.html_url }} --body "@dependabot squash and merge"
