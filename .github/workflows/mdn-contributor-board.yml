@@ -1,0 +1,22 @@
+name: mdn-contributor-board
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # Every 6 hours
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm install @octokit/rest
+
+      - run: node simple-sync.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROJECT_TOKEN }}
