@@ -13,11 +13,6 @@ on:
         default: false
         required: false
         type: boolean
-      command:
-        description: The command to pass to Dependabot
-        default: "squash and merge"
-        required: false
-        type: string
       target-repo:
         description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
         required: true
