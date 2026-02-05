@@ -57,6 +57,7 @@ jobs:
         env:
           UPDATE_TYPE: ${{ steps.dependabot-metadata.outputs.update-type }}
           PREV_VERSION: ${{ steps.dependabot-metadata.outputs.previous-version }}
+          MAINTAINER_CHANGES: ${{ steps.dependabot-metadata.outputs.maintainer-changes }}
         run: |
           eligible=true
 
@@ -68,6 +69,9 @@ jobs:
             eligible=false
           # For 0.0.x versions, patch updates are breaking (semver spec)
           elif [[ "$PREV_VERSION" == 0.0.* && "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
+            eligible=false
+          # Package maintainers changed between versions
+          elif [[ "$MAINTAINER_CHANGES" == "true" ]]; then
             eligible=false
           fi
 
