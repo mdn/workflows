@@ -11,7 +11,7 @@ To use it you will need a [Personal Access Token](https://docs.github.com/en/git
 
 > NOTE: This action only processes pull requests opened by [Dependabot](https://github.com/dependabot).
 
-In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) (e.g. `AUTOMERGE_TOKEN`) with the value of your Personal Access Token, then pass it as the `github-token` input.
+In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named `GH_TOKEN` with the value of your Personal Access Token.
 
 This reusable action depends on the following actions:
 
@@ -31,9 +31,9 @@ A pull request is considered _eligible_ for auto-approve/merge if it is **not** 
 
 ### Required inputs
 
-#### github-token
+#### target-repo
 
-Personal access token used to approve and merge pull requests. If empty, the workflow will skip execution (useful for forks without the secret configured).
+Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the workflow from running on forks of `mdn/workflows`.
 
 - This `input` is required
 
@@ -53,20 +53,6 @@ Merge eligible pull requests (when all required checks pass).
 
 - This `input` is optional with a default of `false`.
 
-### Deprecated inputs
-
-#### target-repo
-
-> **Deprecated:** Use `github-token` instead.
-
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the workflow from running on forks of `mdn/workflows`.
-
-#### GH_TOKEN (secret)
-
-> **Deprecated:** Use `github-token` input instead.
-
-Personal access token passed as a secret. Falls back to this if `github-token` input is empty.
-
 ## Usage
 
 In the repository that will call this action, you will need to add a `.github/workflows/auto-merge.yml` file with the following content:
@@ -81,7 +67,9 @@ jobs:
   auto-merge:
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
     with:
-      github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+      target-repo: "mdn/workflows"
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
 ### With auto-merge enabled
@@ -95,5 +83,7 @@ jobs:
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
     with:
       auto-merge: true
-      github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+      target-repo: "mdn/workflows"
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
