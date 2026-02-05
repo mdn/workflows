@@ -4,12 +4,12 @@ on:
   workflow_call:
     inputs:
       auto-approve:
-        description: Automatically approve pull-requests (except breaking changes and maintainer changes)
+        description: Approve eligible pull requests (no breaking changes, no maintainer changes)
         default: true
         required: false
         type: boolean
       auto-merge:
-        description: Automatically merge pull-requests (when all required checks pass)
+        description: Merge eligible pull requests (when all required checks pass)
         default: false
         required: false
         type: boolean
