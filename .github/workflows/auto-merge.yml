@@ -8,6 +8,11 @@ on:
         default: true
         required: false
         type: boolean
+      auto-merge:
+        description: Automatically merge pull-requests
+        default: false
+        required: false
+        type: boolean
       command:
         description: The command to pass to Dependabot
         default: "squash and merge"
@@ -34,13 +39,48 @@ jobs:
   auto-merge:
     if: github.repository == inputs.target-repo && github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: ahmadnassri/action-dependabot-auto-merge@45fc124d949b19b6b8bf6645b6c9d55f4f9ac61a # v2.6.6
+
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
         with:
-          approve: ${{ inputs.auto-approve }}
-          command: ${{ inputs.command }}
-          target: ${{ inputs.target }}
           github-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Check for breaking change
+        id: check
+        env:
+          UPDATE_TYPE: ${{ steps.dependabot-metadata.outputs.update-type }}
+          PREV_VERSION: ${{ steps.dependabot-metadata.outputs.previous-version }}
+        run: |
+          eligible=true
+
+          # Major updates are breaking
+          if [[ "$UPDATE_TYPE" == "version-update:semver-major" ]]; then
+            eligible=false
+          # For 0.x versions, minor updates are breaking (semver spec)
+          elif [[ "$PREV_VERSION" == 0.* && "$UPDATE_TYPE" == "version-update:semver-minor" ]]; then
+            eligible=false
+          # For 0.0.x versions, patch updates are breaking (semver spec)
+          elif [[ "$PREV_VERSION" == 0.0.* && "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
+            eligible=false
+          fi
+
+          echo "eligible=$eligible" >> $GITHUB_OUTPUT
+
+      - name: Approve
+        if: inputs.auto-approve && steps.check.outputs.eligible == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: gh pr review ${{ github.event.pull_request.html_url }} --approve
+
+      - name: Merge
+        if: inputs.auto-merge && steps.check.outputs.eligible == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: gh pr merge ${{ github.event.pull_request.html_url }} --auto --squash
