@@ -13,21 +13,27 @@ on:
         default: false
         required: false
         type: boolean
+      github-token:
+        description: "Personal access token (preferred). Falls back to deprecated GH_TOKEN secret if empty."
+        default: ''
+        required: false
+        type: string
       target-repo:
-        description: The repo to run this action on. This is to prevent actions from running on forks unless intended.
-        required: true
+        description: "Deprecated: use github-token input instead. The repo to run this action on."
+        default: ''
+        required: false
         type: string
     secrets:
       GH_TOKEN:
-        description: "Personal access token passed from the caller workflow"
-        required: true
+        description: "Deprecated: use github-token input instead."
+        required: false
 
 # No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
 permissions: {}
 
 jobs:
   auto-merge:
-    if: github.repository == inputs.target-repo && github.event.pull_request.user.login == 'dependabot[bot]'
+    if: (inputs.github-token || (inputs.target-repo && github.repository == inputs.target-repo)) && github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +46,7 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2.5.0
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ inputs.github-token || secrets.GH_TOKEN }}
 
       - name: Check for breaking change
         id: check
@@ -70,11 +76,11 @@ jobs:
       - name: Approve
         if: inputs.auto-approve && steps.check.outputs.eligible == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github-token || secrets.GH_TOKEN }}
         run: gh pr review ${{ github.event.pull_request.html_url }} --approve
 
       - name: Enable auto-merge
         if: inputs.auto-merge && steps.check.outputs.eligible == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github-token || secrets.GH_TOKEN }}
         run: gh pr merge ${{ github.event.pull_request.html_url }} --auto --squash
