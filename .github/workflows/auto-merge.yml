@@ -78,7 +78,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: gh pr review ${{ github.event.pull_request.html_url }} --approve
 
-      - name: Merge
+      - name: Enable auto-merge
         if: inputs.auto-merge && steps.check.outputs.eligible == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
