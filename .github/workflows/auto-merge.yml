@@ -22,8 +22,9 @@ on:
         description: "Personal access token passed from the caller workflow"
         required: true
 
-# No GITHUB_TOKEN permissions, as we use GH_TOKEN instead.
-permissions: {}
+permissions:
+  # Checkout.
+  contents: read
 
 jobs:
   auto-merge:
