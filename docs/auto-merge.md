@@ -11,7 +11,7 @@ To use it you will need a [Personal Access Token](https://docs.github.com/en/git
 
 > NOTE: This action only processes pull requests opened by [Dependabot](https://github.com/dependabot).
 
-In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named `GH_TOKEN` with the value of your Personal Access Token.
+In the repository that will call this action, you need to [define a secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named `AUTOMERGE_TOKEN` with the value of your Personal Access Token.
 
 This reusable action depends on the following actions:
 
@@ -30,12 +30,6 @@ A pull request is considered _eligible_ for auto-approve/merge if it is **not** 
 ## Inputs
 
 ### Required inputs
-
-#### target-repo
-
-Specify the target repository this action should run on. This is used to prevent actions from running on repositories other than the target repository. For example, specifying a `target-repo` of `mdn/workflows` will prevent the workflow from running on forks of `mdn/workflows`.
-
-- This `input` is required
 
 ### Optional inputs
 
@@ -60,30 +54,39 @@ In the repository that will call this action, you will need to add a `.github/wo
 ### With defaults (auto-approve only)
 
 ```yml
-name: "auto-merge"
-on: [pull_request_target]
+name: auto-merge
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
 
 jobs:
   auto-merge:
+    if: github.repository_owner == 'mdn'
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
-    with:
-      target-repo: "mdn/workflows"
     secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
 ```
 
 ### With auto-merge enabled
 
 ```yml
-name: "auto-merge"
-on: [pull_request_target]
+name: auto-merge
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
 
 jobs:
   auto-merge:
+    if: github.repository_owner == 'mdn'
     uses: mdn/workflows/.github/workflows/auto-merge.yml@main
     with:
       auto-merge: true
-      target-repo: "mdn/workflows"
     secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
 ```
