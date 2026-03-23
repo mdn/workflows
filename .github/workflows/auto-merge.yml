@@ -13,6 +13,10 @@ on:
         default: false
         required: false
         type: boolean
+      target-repo:
+        description: "(Deprecated) No longer used. Will be removed soon!"
+        required: false
+        type: string
     secrets:
       GH_TOKEN:
         description: "Personal access token passed from the caller workflow"
@@ -27,6 +31,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Warn on deprecated inputs
+        if: inputs.target-repo != ''
+        run: echo "::warning::The 'target-repo' input is deprecated and will be removed soon. Remove it now, or your workflow will stop working then."
+
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
