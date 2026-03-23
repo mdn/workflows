@@ -14,7 +14,8 @@ on:
         required: false
         type: boolean
       target-repo:
-        description: "(Deprecated) No longer used. Will be removed soon!"
+        description: |
+          (Deprecated) This input is deprecated and will be removed soon. Remove it from your workflow, or it will start failing silently. To prevent fork execution, add this to your job instead: if: github.repository_owner == 'your-org'"
         required: false
         type: string
     secrets:
@@ -33,7 +34,8 @@ jobs:
     steps:
       - name: Warn on deprecated inputs
         if: inputs.target-repo != ''
-        run: echo "::warning::The 'target-repo' input is deprecated and will be removed soon. Remove it now, or your workflow will stop working then."
+        run: |
+          echo "::warning::The 'target-repo' input is deprecated and will be removed soon. Remove it from your workflow, or it will start failing silently. To prevent fork execution, add this to your job instead: if: github.repository_owner == 'your-org'"
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
