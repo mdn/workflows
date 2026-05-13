@@ -1,0 +1,16 @@
+name: needs-triage
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - transferred
+
+permissions:
+  issues: write
+
+jobs:
+  needs-triage:
+    uses: mdn/workflows/.github/workflows/needs-triage.yml@main
+    if: github.repository_owner == 'mdn'
