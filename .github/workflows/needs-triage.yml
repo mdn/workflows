@@ -1,0 +1,24 @@
+name: needs-triage
+
+on:
+  workflow_call:
+    inputs:
+      label:
+        description: The label to add to the issue.
+        default: "needs triage"
+        required: false
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  needs-triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add label
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          LABEL: ${{ inputs.label }}
+        run: gh issue edit "$ISSUE_URL" --add-label "$LABEL"
