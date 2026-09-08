@@ -1,0 +1,82 @@
+# Canary for npm forward-compatibility.
+#
+# Runs `npm ci` against the MDN repos that have dependencies with install
+# scripts, using the latest npm rather than the one bundled with Node.js.
+# `--strict-allow-scripts` turns an incomplete `allowScripts` allowlist into a
+# hard failure, so a Dependabot bump that pulls in a new install script surfaces
+# here instead of as a confusing missing-binary error later.
+#
+# Remove this workflow once all MDN repos are on npm 12.
+
+name: npm-latest-canary
+
+on:
+  schedule:
+    # Mondays at 05:17 UTC.
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  npm-ci:
+    name: ${{ matrix.repo }}
+    if: github.repository_owner == 'mdn'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+          - mdn/bcd-utils
+          - mdn/browser-compat-data
+          - mdn/client-toolchain-example
+          - mdn/content
+          - mdn/curriculum
+          - mdn/dex
+          - mdn/express-locallibrary-tutorial
+          - mdn/fred
+          - mdn/mcp
+          - mdn/mdn-http-observatory
+          - mdn/todo-vue
+          - mdn/translated-content
+          - mdn/translated-content-de
+          - mdn/translated-content-it
+          - mdn/tree-sitter-mdn
+          - mdn/triagebot
+          - mdn/webextensions-examples
+
+    steps:
+      - name: Checkout ${{ matrix.repo }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ matrix.repo }}
+          persist-credentials: false
+
+      - name: Resolve Node.js version
+        id: node
+        run: |
+          if [ -f .nvmrc ]; then
+            echo "file=.nvmrc" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=24" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: ${{ steps.node.outputs.file }}
+          node-version: ${{ steps.node.outputs.version }}
+
+      - name: Install npm@latest
+        run: npm install -g npm@latest
+
+      - name: Report npm version
+        run: npm --version
+
+      - name: Install
+        run: npm ci --strict-allow-scripts
+        env:
+          # https://github.com/microsoft/vscode-ripgrep#github-api-limit-note
+          GITHUB_TOKEN: ${{ github.token }}
