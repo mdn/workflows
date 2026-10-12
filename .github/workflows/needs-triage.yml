@@ -20,5 +20,36 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
           LABEL: ${{ inputs.label }}
-        run: gh issue edit "$ISSUE_URL" --add-label "$LABEL"
+          ACTION: ${{ github.event.action }}
+          TRIGGERED_AT: ${{ github.event.action == 'transferred' && github.event.changes.new_issue.updated_at || github.event.action == 'opened' && github.event.changes.old_issue == null && github.event.issue.created_at || github.event.issue.updated_at }}
+        run: |
+          # Use the webhook timestamp as the cutoff, not the issue's current timestamp.
+          if [[ "$ACTION" == "opened" || "$ACTION" == "reopened" || "$ACTION" == "transferred" ]]; then
+            issue_events=$(gh api --paginate --slurp \
+              "repos/$REPOSITORY/issues/$ISSUE_NUMBER/events?per_page=100")
+
+            removed_after_trigger=$(
+              jq \
+                --arg label "$LABEL" \
+                --arg triggered_at "$TRIGGERED_AT" \
+                '
+                  add
+                  | any(.[];
+                      .event == "unlabeled"
+                      and .label.name == $label
+                      and (.created_at | fromdateiso8601)
+                        > ($triggered_at | fromdateiso8601)
+                    )
+                ' <<< "$issue_events"
+            )
+
+            if [[ "$removed_after_trigger" == true ]]; then
+              echo "Skipping label because it was removed after the triggering event."
+              exit 0
+            fi
+          fi
+
+          gh issue edit "$ISSUE_URL" --add-label "$LABEL"
