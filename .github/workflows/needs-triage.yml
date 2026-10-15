@@ -17,39 +17,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add label
+        uses: actions/github-script@v9
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
           LABEL: ${{ inputs.label }}
-          ACTION: ${{ github.event.action }}
-          TRIGGERED_AT: ${{ github.event.action == 'transferred' && github.event.changes.new_issue.updated_at || github.event.action == 'opened' && github.event.changes.old_issue == null && github.event.issue.created_at || github.event.issue.updated_at }}
-        run: |
-          # Use the webhook timestamp as the cutoff, not the issue's current timestamp.
-          if [[ "$ACTION" == "opened" || "$ACTION" == "reopened" || "$ACTION" == "transferred" ]]; then
-            issue_events=$(gh api --paginate --slurp \
-              "repos/$REPOSITORY/issues/$ISSUE_NUMBER/events?per_page=100")
+        with:
+          script: |
+            const { action, issue, changes } = context.payload;
+            const label = process.env.LABEL;
 
-            removed_after_trigger=$(
-              jq \
-                --arg label "$LABEL" \
-                --arg triggered_at "$TRIGGERED_AT" \
-                '
-                  add
-                  | any(.[];
-                      .event == "unlabeled"
-                      and .label.name == $label
-                      and (.created_at | fromdateiso8601)
-                        > ($triggered_at | fromdateiso8601)
-                    )
-                ' <<< "$issue_events"
-            )
+            if (["opened", "reopened", "transferred"].includes(action)) {
+              let triggeredAt;
 
-            if [[ "$removed_after_trigger" == true ]]; then
-              echo "Skipping label because it was removed after the triggering event."
-              exit 0
-            fi
-          fi
+              if (action === "transferred") {
+                triggeredAt = Date.parse(changes.new_issue.updated_at);
+              } else if (action === "opened" && changes?.old_issue == null) {
+                triggeredAt = Date.parse(issue.created_at);
+              } else {
+                triggeredAt = Date.parse(issue.updated_at);
+              }
 
-          gh issue edit "$ISSUE_URL" --add-label "$LABEL"
+              if (Number.isNaN(triggeredAt)) {
+                throw new Error("Could not determine the triggering event timestamp.");
+              }
+
+              const events = await github.paginate(
+                github.rest.issues.listEvents,
+                {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  per_page: 100,
+                },
+              );
+
+              const removedAfterTrigger = events.some(
+                (event) =>
+                  event.event === "unlabeled" &&
+                  event.label?.name?.toLowerCase() === label.toLowerCase() &&
+                  Date.parse(event.created_at) > triggeredAt,
+              );
+
+              if (removedAfterTrigger) {
+                core.info("Skipping label because it was removed after the triggering event.");
+                return;
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: issue.number,
+              labels: [label],
+            });
