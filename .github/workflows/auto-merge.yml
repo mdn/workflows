@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   auto-merge:
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && !github.event.pull_request.draft
     runs-on: ubuntu-latest
 
     steps:
@@ -84,4 +84,11 @@ jobs:
         if: inputs.auto-merge && steps.check.outputs.eligible == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: gh pr merge ${{ github.event.pull_request.html_url }} --auto --squash
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          # The event payload is a snapshot; the PR may have become a draft since
+          if [[ "$(gh pr view "$PR_URL" --json isDraft --jq .isDraft)" == "true" ]]; then
+            echo "::notice::Skipping auto-merge, the PR is now a draft"
+            exit 0
+          fi
+          gh pr merge "$PR_URL" --auto --squash
