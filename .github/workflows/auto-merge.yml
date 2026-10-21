@@ -81,7 +81,8 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
           me="$(gh api user --jq .login)"
-          approved="$(gh pr view "$PR_URL" --json reviews,headRefOid --jq ".headRefOid as \$head | [.reviews[] | select(.author.login == \"$me\" and .state == \"APPROVED\" and .commit.oid == \$head)] | length")"
+          approved="$(gh pr view "$PR_URL" --json reviews,headRefOid \
+            | jq --arg me "$me" '.headRefOid as $head | [.reviews[] | select(.author.login == $me and .state == "APPROVED" and .commit.oid == $head)] | length')"
           if [[ "$approved" != "0" ]]; then
             echo "::notice::Skipping approval, the latest commit is already approved by $me"
             exit 0
