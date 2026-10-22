@@ -22,17 +22,11 @@ jobs:
           LABEL: ${{ inputs.label }}
         with:
           script: |
-            const { action, issue, changes } = context.payload;
+            const { action, issue } = context.payload;
             const label = process.env.LABEL;
 
             if (["opened", "reopened", "transferred"].includes(action)) {
-              let triggeredAt;
-
-              if (action === "opened" && changes?.old_issue == null) {
-                triggeredAt = Date.parse(issue.created_at);
-              } else {
-                triggeredAt = Date.parse(issue.updated_at);
-              }
+              const triggeredAt = Date.parse(issue.updated_at);
 
               if (Number.isNaN(triggeredAt)) {
                 throw new Error("Could not determine the triggering event timestamp.");
