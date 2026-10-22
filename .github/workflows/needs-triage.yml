@@ -28,9 +28,7 @@ jobs:
             if (["opened", "reopened", "transferred"].includes(action)) {
               let triggeredAt;
 
-              if (action === "transferred") {
-                triggeredAt = Date.parse(changes.new_issue.updated_at);
-              } else if (action === "opened" && changes?.old_issue == null) {
+              if (action === "opened" && changes?.old_issue == null) {
                 triggeredAt = Date.parse(issue.created_at);
               } else {
                 triggeredAt = Date.parse(issue.updated_at);
