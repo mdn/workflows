@@ -3,6 +3,7 @@
 The `needs-triage` reusable action is located at [`.github/workflows/needs-triage.yml`](https://github.com/mdn/workflows/tree/main/.github/workflows/needs-triage.yml).
 
 It adds a label (default: `needs triage`) to an issue when it is opened, reopened, or transferred.
+The label is not added if it was removed from the issue after the triggering event, so maintainer removals made while the workflow is starting are preserved.
 
 ## Inputs
 

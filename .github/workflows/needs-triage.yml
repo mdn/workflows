@@ -17,8 +17,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add label
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
           LABEL: ${{ inputs.label }}
-        run: gh issue edit "$ISSUE_URL" --add-label "$LABEL"
+        with:
+          script: |
+            const { action, issue } = context.payload;
+            const label = process.env.LABEL;
+
+            if (["opened", "reopened", "transferred"].includes(action)) {
+              const triggeredAt = Date.parse(issue.updated_at);
+
+              if (Number.isNaN(triggeredAt)) {
+                throw new Error("Could not determine the triggering event timestamp.");
+              }
+
+              const events = await github.paginate(
+                github.rest.issues.listEvents,
+                {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  per_page: 100,
+                },
+              );
+
+              const removedAfterTrigger = events.some(
+                (event) =>
+                  event.event === "unlabeled" &&
+                  event.label?.name?.toLowerCase() === label.toLowerCase() &&
+                  Date.parse(event.created_at) > triggeredAt,
+              );
+
+              if (removedAfterTrigger) {
+                core.info("Skipping label because it was removed after the triggering event.");
+                return;
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: issue.number,
+              labels: [label],
+            });
