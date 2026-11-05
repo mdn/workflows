@@ -1,0 +1,66 @@
+name: auto-rebase
+
+on:
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        description: "Personal access token passed from the caller workflow"
+        required: true
+
+# The job only uses the caller's PAT, never GITHUB_TOKEN.
+permissions: {}
+
+jobs:
+  auto-rebase:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: auto-rebase-${{ github.repository }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Rebase one Dependabot pull request that is behind
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          # GitHub computes merge state in the background after a push to the base branch.
+          for attempt in 1 2 3 4 5; do
+            [[ $attempt -gt 1 ]] && sleep 15
+            prs=$(gh pr list --author 'app/dependabot' --state open --limit 100 \
+              --json number,mergeStateStatus,autoMergeRequest)
+            unknown=$(jq -r '[.[] | select(.autoMergeRequest != null and .mergeStateStatus == "UNKNOWN")
+              | "#\(.number)"] | join(", ")' <<<"$prs")
+            [[ -z "$unknown" ]] && break
+          done
+          [[ -z "$unknown" ]] || echo "::warning::Merge state still unknown, skipping: $unknown"
+
+          # BEHIND is only reported when the base branch requires up-to-date branches.
+          # Rebase one pull request per run: each merge to the base branch triggers the next.
+          numbers=$(jq -r '[.[] | select(.mergeStateStatus == "BEHIND" and .autoMergeRequest != null)]
+            | sort_by(.number) | .[].number' <<<"$prs")
+
+          for pr in $numbers; do
+            commits=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$pr/commits" | jq 'add')
+
+            # Dependabot refuses to rebase pull requests edited by someone else.
+            if jq -e 'any(.[]; .author.login != "dependabot[bot]")' <<<"$commits" >/dev/null; then
+              echo "#$pr: skipped, has non-Dependabot commits"
+              continue
+            fi
+
+            # A rebase was already requested since the last push.
+            last_push=$(jq -r 'map(.commit.committer.date) | max' <<<"$commits")
+            comments=$(gh api --paginate --slurp "repos/$GH_REPO/issues/$pr/comments" | jq 'add')
+            if jq -e --arg since "$last_push" \
+              'any(.[]; .body == "@dependabot rebase" and .created_at > $since)' <<<"$comments" >/dev/null; then
+              echo "#$pr: skipped, rebase already requested"
+              continue
+            fi
+
+            echo "#$pr: requesting rebase"
+            if gh pr comment "$pr" --body '@dependabot rebase'; then
+              break
+            fi
+            echo "::warning::Failed to comment on #$pr"
+          done

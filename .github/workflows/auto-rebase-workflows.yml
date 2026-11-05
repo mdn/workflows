@@ -1,0 +1,16 @@
+name: auto-rebase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auto-rebase:
+    uses: mdn/workflows/.github/workflows/auto-rebase.yml@main
+    if: github.repository_owner == 'mdn'
+    secrets:
+      GH_TOKEN: ${{ secrets.AUTOMERGE_TOKEN }}
