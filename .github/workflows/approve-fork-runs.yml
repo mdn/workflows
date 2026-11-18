@@ -1,0 +1,125 @@
+name: approve-fork-runs
+
+on:
+  workflow_call:
+    inputs:
+      allowed-paths:
+        description: JavaScript regular expression that every changed file path (including the previous path of renamed files) must match for the workflow runs to be approved.
+        required: true
+        type: string
+      max-wait-seconds:
+        description: The maximum number of seconds to wait for workflow runs awaiting approval to appear.
+        default: 60
+        required: false
+        type: number
+
+# The job below requests only what it needs.
+permissions: {}
+
+jobs:
+  approve-fork-runs:
+    # `pull_request_target` runs the workflow from the base branch, so forks cannot modify it.
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.fork
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      pull-requests: read
+    steps:
+      # Never check out or execute pull request code here.
+      - name: Approve workflow runs
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          ALLOWED_PATHS: ${{ inputs.allowed-paths }}
+          MAX_WAIT_SECONDS: ${{ inputs.max-wait-seconds }}
+        with:
+          script: |
+            const POLL_INTERVAL_MS = 5000;
+
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request;
+
+            if (!process.env.ALLOWED_PATHS) {
+              core.setFailed("The 'allowed-paths' input must not be empty.");
+              return;
+            }
+
+            const allowedPaths = new RegExp(process.env.ALLOWED_PATHS);
+            const deadline = Date.now() + Number(process.env.MAX_WAIT_SECONDS) * 1000;
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: pr.number,
+              per_page: 100,
+            });
+
+            const disallowed = files
+              .flatMap((file) => [file.filename, file.previous_filename])
+              .filter((path) => path && !allowedPaths.test(path));
+
+            if (disallowed.length > 0) {
+              core.info(`Not allowed:\n${disallowed.join("\n")}`);
+              core.info("Leaving the runs for manual approval.");
+              return;
+            }
+
+            core.info(`All ${files.length} changed files match 'allowed-paths'.`);
+
+            const approved = new Set();
+
+            while (true) {
+              const runs = await github.paginate(
+                github.rest.actions.listWorkflowRunsForRepo,
+                {
+                  owner,
+                  repo,
+                  head_sha: pr.head.sha,
+                  event: "pull_request",
+                  per_page: 100,
+                },
+              );
+              const held = runs.filter(
+                (run) =>
+                  run.conclusion === "action_required" && !approved.has(run.id),
+              );
+
+              if (held.length > 0) {
+                // The file list is capped by the API and may predate a push, so verify both.
+                const { data: current } = await github.rest.pulls.get({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                });
+
+                if (current.head.sha !== pr.head.sha) {
+                  core.info("The pull request head changed, not approving.");
+                  return;
+                }
+
+                if (current.changed_files !== files.length) {
+                  core.info("The list of changed files is incomplete, leaving the runs for manual approval.");
+                  return;
+                }
+
+                for (const run of held) {
+                  core.info(`Approving workflow run ${run.id} (${run.name}).`);
+                  await github.rest.actions.approveWorkflowRun({
+                    owner,
+                    repo,
+                    run_id: run.id,
+                  });
+                  approved.add(run.id);
+                }
+              } else if (runs.length > 0) {
+                // Runs exist and none (still) await approval.
+                break;
+              }
+
+              if (Date.now() >= deadline) {
+                break;
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+            }
+
+            core.info(`Approved ${approved.size} workflow run(s).`);

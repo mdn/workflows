@@ -4,6 +4,7 @@ Reusable GitHub Actions workflows for use in MDN repositories.
 
 ## Available actions
 
+- [approve-fork-runs](.github/workflows/approve-fork-runs.yml) ([docs](docs/approve-fork-runs.md)) - approve workflow runs for fork pull requests that only change allowlisted files
 - [auto-merge](.github/workflows/auto-merge.yml) ([docs](docs/auto-merge.md)) - automatically merge pull requests
 - [lock-closed](.github/workflows/lock-closed.yml) ([docs](docs/lock-closed.md)) - lock closed issues and pull requests
 - [needs-triage](.github/workflows/needs-triage.yml) ([docs](docs/needs-triage.md)) - label issues that need triage when opened, reopened, or transferred
